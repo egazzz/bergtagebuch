@@ -1,5 +1,5 @@
 /* Bergtagebuch Web – Service Worker: App offline verfügbar, Kartenkacheln zwischenspeichern */
-const VERSION = 'bt-1.7.0';
+const VERSION = 'bt-1.7.1';
 const APP_CACHE = 'app-' + VERSION;
 const TILE_CACHE = 'tiles-v1';
 const TILE_MAX = 3000;

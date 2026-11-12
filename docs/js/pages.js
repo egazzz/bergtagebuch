@@ -59,7 +59,7 @@ async function openEdit(id, onSaved) {
         <div class="unit"><input class="inp" id="e_dh" inputmode="numeric" value="${t.duration ? Math.floor(t.duration / 60) : ''}"><span>h</span></div>
         <div class="unit"><input class="inp" id="e_dm" inputmode="numeric" value="${t.duration ? t.duration % 60 : ''}"><span>min</span></div></div></div>
     </div>
-    <div class="card"><div class="row"><div class="lbl grow" style="margin:0">⛰️ ${esc(T('summits'))}</div>
+    <div class="card" id="e_sumcard"><div class="lbl">⛰️ ${esc(T('summits'))}</div><div>
       <button class="chip" id="s_add">＋ ${esc(T('summit_add'))}</button><button class="chip" id="s_det">🔎 ${esc(T('summit_detect'))}</button><button class="chip" id="s_near">📍 ${esc(T('summit_near'))}</button></div>
       <div id="e_sums"></div>
       <label class="check"><input type="checkbox" id="e_reached" ${t.summitReached !== false ? 'checked' : ''}>${esc(T('f_summit_reached'))}</label></div>
