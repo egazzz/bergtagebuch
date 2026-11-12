@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bergtagebuch – Aiuto</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1F2A2E; background: #F3F6F5; margin: 0; padding: 0 16px 40px; line-height: 1.5; font-size: 15px; }
+  h1 { color: #1D3D47; font-size: 22px; margin: 18px 0 6px; }
+  h2 { color: #1D3D47; font-size: 18px; margin: 26px 0 6px; padding-top: 8px; border-top: 1px solid #DDE5E3; }
+  .toc { background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .toc a { display: block; padding: 6px 0; color: #2A9D8F; text-decoration: none; font-weight: bold; }
+  .tip { background: #E0EFEC; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .warn { background: #FDEBD9; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  ol, ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
+  th { background: #E0EFEC; }
+  a { color: #2A9D8F; }
+</style>
+</head>
+<body>
+<h1 id="start">Bergtagebuch – Aiuto</h1>
+<div class="toc"><a href="#install">Installare su iPhone</a><a href="#edit">Registrare un'escursione</a><a href="#gpx">GPX da Komoot, Strava, Garmin</a><a href="#summits">Cime</a><a href="#photos">Foto</a><a href="#map">Mappa</a><a href="#stats">Statistiche e traguardi</a><a href="#backup">Dati e backup</a><a href="#update">Aggiornamenti</a><a href="#support">Sostenere</a></div>
+<h2 id="install">Installare su iPhone</h2>
+<p>Il Bergtagebuch per iPhone e iPad è una web app. Non si scarica dall'App Store, ma si aggiunge alla schermata Home direttamente da Safari:</p>
+<ol><li>Apri la pagina in <b>Safari</b>.</li><li>Tocca <b>Condividi</b> ⬆️ in basso.</li><li>Scegli <b>Aggiungi alla schermata Home</b> e tocca <b>Aggiungi</b>.</li></ol>
+<p>Poi il Bergtagebuch si avvia come un'app, a schermo intero e anche senza internet.</p>
+<div class="warn"><b>Importante:</b> apri il Bergtagebuch sempre dall'icona sulla schermata Home. I dati nella scheda di Safari e nell'app installata sono separati.</div>
+<p>Per Android esiste l'app Android (vedi GitHub). La web app funziona comunque anche lì e sul computer con Chrome, Edge o Firefox.</p>
+<h2 id="edit">Registrare un'escursione</h2>
+<p>Nel diario tocca <b>+</b>. Obbligatorio è solo il nome, il resto è facoltativo:</p>
+<ul><li><b>Data, attività, regione, punto di partenza</b></li><li><b>Salita, discesa, distanza, quota della cima, durata</b> – si compilano automaticamente con un file GPX</li>
+<li><b>Cime</b> – anche più di una, vedi sotto</li><li><b>Difficoltà</b> con la scala adatta, per lo scialpinismo anche il <b>grado di pericolo valanghe</b></li>
+<li><b>Meteo, valutazione, compagni, foto, posizione</b></li><li><b>Descrizione, condizioni, caratteristiche</b></li></ul>
+<p>In fondo all'elenco <b>Attività</b> puoi creare attività tue, ad es. ciaspole o trail running.</p>
+<h2 id="gpx">GPX da Komoot, Strava, Garmin</h2>
+<p>Su iPhone la traccia arriva nel Bergtagebuch tramite un file GPX salvato nell'app <b>File</b> (ad es. nella cartella Download o in iCloud Drive).</p>
+<table><tr><th>App</th><th>Come ottenere il file GPX</th></tr>
+<tr><td>Komoot</td><td>Apri il tour su komoot.com in Safari → ⋯ → <i>Download</i> / <i>Scarica file GPX</i>. Nell'app Komoot: tour → ⋯ → <i>Esporta</i>, se disponibile.</td></tr>
+<tr><td>Strava</td><td>Apri strava.com in Safari (sito desktop), attività → ⋯ → <i>Esporta GPX</i>.</td></tr>
+<tr><td>Garmin</td><td>Apri connect.garmin.com in Safari, attività → ingranaggio / ⋯ → <i>Esporta in GPX</i>.</td></tr></table>
+<p>Poi nel modulo tocca <b>Importa GPX</b> e scegli il file. Vengono ripresi distanza, salita e discesa, quota della cima, durata, data, posizione del punto più alto, il nome (se vuoto) e le cime.</p>
+<div class="tip">Il dislivello viene calcolato secondo il tipo di dati di quota: quote lisce (Komoot, barometro) quasi al metro, quote GPS rumorose vengono smussate. Piccole differenze rispetto a Komoot o Strava sono normali.</div>
+<h3>Molti file GPX insieme</h3>
+<p>In <b>Altro → Importa file GPX</b> scegli fino a 100 file. Per ogni file nasce un'escursione con traccia e cime riconosciute. Escursioni con stessa data e stessa distanza vengono saltate.</p>
+<h2 id="summits">Cime</h2>
+<p>Un'escursione può avere più cime. Contano per la classifica delle cime e per i traguardi.</p>
+<ul><li><b>＋ Cima</b> – inserire nome e quota a mano</li><li><b>🔎 Riconosci</b> – cerca i punti alti nella traccia GPX (o nella posizione) e prende nomi e quote da OpenStreetMap</li>
+<li><b>📍 Vicino</b> – elenco delle cime intorno alla posizione</li></ul>
+<p>Per la ricerca dei nomi serve internet. Tocca una cima per modificarla o eliminarla. Se <b>Cima / meta raggiunta</b> è disattivato, l'escursione non conta nella classifica.</p>
+<h2 id="photos">Foto</h2>
+<p>Con <b>＋</b> scegli una o più foto dalla libreria. Vengono salvate ridotte (max. 1600 pixel). Se la prima foto ha una posizione e l'escursione non ne ha ancora una, viene ripresa.</p>
+<p>Nel visualizzatore scorri tra le immagini. <b>Zoom</b> con due dita o doppio tocco. ⭐ imposta la foto di copertina, 🗑️ la rimuove dall'escursione.</p>
+<div class="tip">Perché iOS passi la posizione: nella finestra di scelta foto tocca <i>Opzioni</i> in alto e attiva <i>Posizione</i>.</div>
+<h2 id="map">Mappa</h2>
+<p>La mappa mostra tutte le escursioni con posizione come spilli colorati, filtrabili per anno. Con 🗂️ scegli il tipo di mappa (topografica, OpenStreetMap, satellite, ortofoto e mappa di base Alto Adige …) e un colore. 📍 mostra la tua posizione.</p>
+<p>Le zone della mappa già viste restano salvate e sono visibili anche senza rete.</p>
+<h2 id="stats">Statistiche e traguardi</h2>
+<p>Per ogni anno o per tutti gli anni: escursioni, dislivello, chilometri, ore, giornate e cime, con confronto all'anno precedente. Inoltre attività, dislivello per mese, record, la <b>classifica delle cime</b> (per quota, più cime di un'escursione insieme), compagni e regioni più frequenti e 24 <b>traguardi</b>.</p>
+<h2 id="backup">Dati e backup</h2>
+<p>Tutte le escursioni e foto restano sul tuo dispositivo, nella memoria di questo browser. Non c'è nessun account e nessun server.</p>
+<div class="warn"><b>Fai regolarmente un backup!</b> I dati si perdono se nelle impostazioni dell'iPhone cancelli i dati dei siti di Safari, rimuovi l'icona dalla schermata Home o cambi dispositivo.</div>
+<p><b>Altro → Crea backup</b> genera un file <i>bergtagebuch_DATA.json</i> con tutte le escursioni, tracce e foto. Salvalo con <i>Salva in File</i> su iCloud Drive o invialo a te stesso. Con <b>Ripristina backup</b> lo reimporti, anche su un altro dispositivo o sul computer.</p>
+<p>I backup dell'app Android (ZIP) e della web app (JSON) hanno formati diversi e non sono intercambiabili.</p>
+<h2 id="update">Aggiornamenti</h2>
+<p>A ogni avvio la web app controlla se c'è una nuova versione e chiede se ricaricare. I tuoi dati restano.</p>
+<h2 id="support">Sostenere</h2>
+<p>Il Bergtagebuch è gratuito, senza pubblicità e senza account. Se ti piace, puoi sostenerne lo sviluppo su <a href="https://ko-fi.com/egazzz" target="_blank" rel="noopener">Ko-fi</a>.</p>
+
+</body>
+</html>

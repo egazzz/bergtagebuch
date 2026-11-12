@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bergtagebuch – Hilfe</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1F2A2E; background: #F3F6F5; margin: 0; padding: 0 16px 40px; line-height: 1.5; font-size: 15px; }
+  h1 { color: #1D3D47; font-size: 22px; margin: 18px 0 6px; }
+  h2 { color: #1D3D47; font-size: 18px; margin: 26px 0 6px; padding-top: 8px; border-top: 1px solid #DDE5E3; }
+  .toc { background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .toc a { display: block; padding: 6px 0; color: #2A9D8F; text-decoration: none; font-weight: bold; }
+  .tip { background: #E0EFEC; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .warn { background: #FDEBD9; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  ol, ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
+  th { background: #E0EFEC; }
+  a { color: #2A9D8F; }
+</style>
+</head>
+<body>
+<h1 id="start">Bergtagebuch – Hilfe</h1>
+<div class="toc"><a href="#install">Auf dem iPhone installieren</a><a href="#edit">Tour erfassen</a><a href="#gpx">GPX aus Komoot, Strava, Garmin</a><a href="#summits">Gipfel</a><a href="#photos">Fotos</a><a href="#map">Karte</a><a href="#stats">Statistik und Erfolge</a><a href="#backup">Daten und Backup</a><a href="#update">Updates</a><a href="#support">Unterstützen</a></div>
+<h2 id="install">Auf dem iPhone installieren</h2>
+<p>Das Bergtagebuch für iPhone und iPad ist eine Web-App. Sie wird nicht aus dem App Store geladen, sondern direkt aus Safari auf den Home-Bildschirm gelegt:</p>
+<ol><li>Die Seite in <b>Safari</b> öffnen.</li><li>Unten auf <b>Teilen</b> ⬆️ tippen.</li><li><b>Zum Home-Bildschirm</b> wählen und <b>Hinzufügen</b> tippen.</li></ol>
+<p>Danach startet das Bergtagebuch wie eine App, im Vollbild und auch ohne Internet.</p>
+<div class="warn"><b>Wichtig:</b> Öffne das Bergtagebuch immer über das Symbol auf dem Home-Bildschirm. Die Daten im Safari-Tab und in der installierten App sind getrennt.</div>
+<p>Auf Android-Handys gibt es die eigene Android-App (siehe GitHub). Die Web-App läuft aber auch dort und am Computer in Chrome, Edge oder Firefox.</p>
+<h2 id="edit">Tour erfassen</h2>
+<p>Tippe im Tagebuch auf <b>+</b>. Pflicht ist nur der Tourname, alles andere ist freiwillig:</p>
+<ul><li><b>Datum, Aktivität, Region, Startpunkt</b></li><li><b>Aufstieg, Abstieg, Distanz, Gipfelhöhe, Dauer</b> – füllt sich mit einer GPX-Datei automatisch</li>
+<li><b>Gipfel</b> – auch mehrere pro Tour, siehe unten</li><li><b>Schwierigkeit</b> nach der passenden Skala, bei Skitouren zusätzlich die <b>Lawinenwarnstufe</b></li>
+<li><b>Wetter, Bewertung, Begleiter, Fotos, Position</b></li><li><b>Beschreibung, Verhältnisse, Merkmale</b></li></ul>
+<p>Bei <b>Aktivität</b> kannst du ganz unten eigene Aktivitäten anlegen, z. B. Schneeschuh oder Trailrunning.</p>
+<h2 id="gpx">GPX aus Komoot, Strava, Garmin</h2>
+<p>Auf dem iPhone kommt der Track über eine GPX-Datei ins Bergtagebuch, die in der App <b>Dateien</b> liegt (z. B. im Ordner Downloads oder in iCloud Drive).</p>
+<table><tr><th>App</th><th>So kommst du zur GPX-Datei</th></tr>
+<tr><td>Komoot</td><td>Tour auf komoot.com in Safari öffnen → ⋯ → <i>Download</i> / <i>GPX-Datei herunterladen</i>. In der Komoot-App: Tour → ⋯ → <i>Exportieren</i>, falls angeboten.</td></tr>
+<tr><td>Strava</td><td>strava.com in Safari öffnen (Desktop-Website), Aktivität → ⋯ → <i>GPX exportieren</i>.</td></tr>
+<tr><td>Garmin</td><td>connect.garmin.com in Safari öffnen, Aktivität → Zahnrad / ⋯ → <i>In GPX exportieren</i>.</td></tr></table>
+<p>Dann in der Eingabe auf <b>GPX importieren</b> tippen und die Datei wählen. Übernommen werden Distanz, Auf- und Abstieg, Gipfelhöhe, Dauer, Datum, Position des höchsten Punkts, der Tourname (wenn leer) und die Gipfel.</p>
+<div class="tip">Die Höhenmeter werden je nach Art der Höhendaten berechnet: glatte Höhen (Komoot, Barometer) fast metergenau, rauschende GPS-Höhen geglättet. Kleine Abweichungen zu Komoot oder Strava sind normal.</div>
+<h3>Viele GPX-Dateien auf einmal</h3>
+<p>Unter <b>Mehr → GPX-Dateien importieren</b> wählst du bis zu 100 Dateien. Je Datei entsteht eine Tour mit Track und erkannten Gipfeln. Touren mit gleichem Datum und gleicher Distanz werden übersprungen.</p>
+<h2 id="summits">Gipfel</h2>
+<p>Eine Tour kann mehrere Gipfel haben. Sie zählen für die Gipfel-Rangliste und die Erfolge.</p>
+<ul><li><b>＋ Gipfel</b> – Name und Höhe selbst eintragen</li><li><b>🔎 Erkennen</b> – sucht Hochpunkte im GPX-Track (oder an der Position) und holt Namen und Höhen aus OpenStreetMap</li>
+<li><b>📍 Nähe</b> – Liste der Gipfel rund um die Position zum Antippen</li></ul>
+<p>Für die Namenssuche braucht es Internet. Antippen eines Gipfels zum Ändern oder Löschen. Ist <b>Gipfel / Ziel erreicht</b> ausgeschaltet, zählt die Tour nicht in der Rangliste.</p>
+<h2 id="photos">Fotos</h2>
+<p>Mit <b>＋</b> wählst du ein oder mehrere Fotos aus der Mediathek. Sie werden verkleinert gespeichert (max. 1600 Pixel). Hat das erste Foto einen Standort und die Tour noch keine Position, wird diese übernommen.</p>
+<p>Im Foto-Viewer wischst du zwischen den Bildern. <b>Zoomen</b> mit zwei Fingern oder Doppeltipp. ⭐ macht ein Foto zum Titelbild, 🗑️ entfernt es aus der Tour.</p>
+<div class="tip">Damit iOS den Aufnahmeort mitgibt: im Foto-Auswahlfenster oben auf <i>Optionen</i> tippen und <i>Standort</i> einschalten.</div>
+<h2 id="map">Karte</h2>
+<p>Die Karte zeigt alle Touren mit Position als farbige Nadeln, nach Jahr filterbar. Mit 🗂️ wählst du den Kartentyp (Topo, OpenStreetMap, Satellit, Orthofoto und Basiskarte Südtirol …) und eine Farbe. 📍 zeigt deinen Standort.</p>
+<p>Bereits angesehene Kartenausschnitte bleiben gespeichert und sind auch ohne Empfang sichtbar.</p>
+<h2 id="stats">Statistik und Erfolge</h2>
+<p>Für jedes Jahr oder alle Jahre: Touren, Höhenmeter, Kilometer, Stunden, Tourentage und Gipfel, mit Vergleich zum Vorjahr. Dazu Aktivitäten, Höhenmeter pro Monat, Rekorde, die <b>Gipfel-Rangliste</b> (nach Höhe, mehrere Gipfel einer Tour zusammen), häufigste Begleiter und Regionen und 24 <b>Erfolge</b>.</p>
+<h2 id="backup">Daten und Backup</h2>
+<p>Alle Touren und Fotos bleiben auf deinem Gerät, im Speicher dieses Browsers. Es gibt kein Konto und keinen Server.</p>
+<div class="warn"><b>Mach regelmäßig ein Backup!</b> Die Daten gehen verloren, wenn du in den iPhone-Einstellungen die Safari-Websitedaten löschst, das Symbol vom Home-Bildschirm entfernst oder das Gerät wechselst.</div>
+<p><b>Mehr → Backup erstellen</b> erzeugt eine Datei <i>bergtagebuch_DATUM.json</i> mit allen Touren, Tracks und Fotos. Speichere sie mit <i>In Dateien sichern</i> in iCloud Drive oder sende sie dir selbst. Mit <b>Backup wiederherstellen</b> spielst du sie wieder ein, auch auf einem anderen Gerät oder am Computer.</p>
+<p>Backups der Android-App (ZIP) und der Web-App (JSON) haben unterschiedliche Formate und sind nicht untereinander austauschbar.</p>
+<h2 id="update">Updates</h2>
+<p>Die Web-App prüft bei jedem Start, ob es eine neue Version gibt, und fragt dann, ob sie neu laden soll. Deine Daten bleiben dabei erhalten.</p>
+<h2 id="support">Unterstützen</h2>
+<p>Das Bergtagebuch ist kostenlos, ohne Werbung und ohne Konto. Wenn es dir gefällt, kannst du die Weiterentwicklung auf <a href="https://ko-fi.com/egazzz" target="_blank" rel="noopener">Ko-fi</a> unterstützen.</p>
+
+</body>
+</html>
