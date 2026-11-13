@@ -8,17 +8,20 @@ function h(html) { const t = document.createElement('template'); t.innerHTML = h
 
 /* ------------------------------------------------------------------ Daten laden */
 async function loadAll() {
-  S.tours = await DB.all('tours');
+  S.tours = (await DB.all('tours')).map(cleanTour);
   S.activities = await DB.kvGet('activities', null);
   if (!S.activities) { S.activities = DEFAULT_ACTIVITIES.map(a => ({ ...a })); await DB.kvSet('activities', S.activities); }
+  S.activities = S.activities.map(cleanActivity);
   S.regions = await DB.kvGet('regions', null);
   if (!S.regions) { S.regions = DEFAULT_REGIONS.map(r => ({ ...r })); await DB.kvSet('regions', S.regions); }
+  S.regions = S.regions.map(cleanRegion);
   S.mapStyle = await DB.kvGet('mapStyle', 'topo');
   S.mapFilter = await DB.kvGet('mapFilter', 'none');
   S.font = await DB.kvGet('font', 'system');
   S.uiScale = await DB.kvGet('uiScale', 100);
   S.formMode = await DB.kvGet('formMode', 'open');
   S.backupReminder = await DB.kvGet('backupReminder', true);
+  S.autoSummits = await DB.kvGet('autoSummits', true);
   applyAppearance();
 }
 /* Schriftart und Größe (100–150 %) sofort anwenden: alle Maße der App sind in rem */
@@ -79,7 +82,7 @@ function dialog({ title = '', text = '', html = '', buttons = [{ label: 'OK', va
 const alertBox = (text, title = '') => dialog({ title, text, buttons: [{ label: 'OK', value: true }] });
 const confirmBox = (text, yes, title = '', danger = false) => dialog({ title, text, buttons: [{ label: T('cancel'), value: false }, { label: yes || 'OK', value: true, cls: danger ? 'danger' : '' }] });
 function choose(title, options) {
-  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span style="font-size:1.375rem">${o.icon}</span>` : ''}<span>${esc(o.label)}</span></button>`).join('');
+  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span style="font-size:1.375rem">${esc(o.icon)}</span>` : ''}<span>${esc(o.label)}</span></button>`).join('');
   return dialog({ title, html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => {
     $$('.opt', ovl).forEach(b => b.onclick = () => close(options[+b.dataset.i].value));
   } });
@@ -151,7 +154,7 @@ function renderTab() {
 }
 /* nach Änderungen an Touren: alles neu zeichnen, was sichtbar ist */
 async function refreshAll() {
-  S.tours = await DB.all('tours');
+  S.tours = (await DB.all('tours')).map(cleanTour);
   renderTab();
 }
 
@@ -200,7 +203,7 @@ function renderDiary(v) {
   wrap.insertAdjacentHTML('beforeend', `<div class="search"><input class="inp" type="search" id="q" placeholder="${esc(T('search_hint'))}" value="${esc(S.filter.q)}"></div>
     <div class="filters">
       <select class="inp" id="fy"><option value="">${esc(T('all_years'))}</option>${yrs.map(y => `<option ${S.filter.year === y ? 'selected' : ''}>${y}</option>`).join('')}</select>
-      <select class="inp" id="fa"><option value="">${esc(T('all_activities'))}</option>${S.activities.filter(a => S.tours.some(t => t.activityId === a.id)).map(a => `<option value="${a.id}" ${S.filter.act === String(a.id) ? 'selected' : ''}>${a.icon} ${esc(pickName(a))}</option>`).join('')}</select>
+      <select class="inp" id="fa"><option value="">${esc(T('all_activities'))}</option>${S.activities.filter(a => S.tours.some(t => t.activityId === a.id)).map(a => `<option value="${a.id}" ${S.filter.act === String(a.id) ? 'selected' : ''}>${esc(a.icon)} ${esc(pickName(a))}</option>`).join('')}</select>
       <select class="inp" id="fs">${['date', 'ascent', 'distance', 'rating'].map(k => `<option value="${k}" ${S.filter.sort === k ? 'selected' : ''}>${esc(T('sort_' + k))}</option>`).join('')}</select>
     </div><div id="tl"></div>`);
   const draw = () => {
@@ -212,9 +215,9 @@ function renderDiary(v) {
       if (S.filter.sort === 'date' && y !== lastYear) { html += `<div class="year-sep">${y} · ${list.filter(x => (x.date || '').startsWith(y)).length} ${esc(T('tours_unit'))}</div>`; lastYear = y; }
       const a = actById(t.activityId), reg = regById(t.regionId);
       html += `<div class="tour" data-id="${t.id}">
-        <div class="th" data-cover="${t.coverId || ''}" style="background-color:${a.color}22">${t.coverId ? '' : a.icon}</div>
+        <div class="th" data-cover="${t.coverId || ''}" style="background-color:${safeColor(a.color)}22">${t.coverId ? '' : esc(a.icon)}</div>
         <div class="grow"><h3>${esc(t.title)}</h3>
-          <div class="meta">${a.icon} ${esc(pickName(a))} · ${fmtDate(t.date)}${reg ? ' · ' + esc(pickName(reg)) : ''}</div>
+          <div class="meta">${esc(a.icon)} ${esc(pickName(a))} · ${fmtDate(t.date)}${reg ? ' · ' + esc(pickName(reg)) : ''}</div>
           <div class="nums">${tourNums(t)}</div>
           ${t.rating ? `<div class="small" style="color:#F4A261">${stars(t.rating)}</div>` : ''}
           ${t.summitReached === false ? `<div class="back">↩ ${esc(T('turned_back'))}</div>` : ''}
@@ -301,7 +304,7 @@ async function chooseMapStyle(map) {
   } });
 }
 function pinIcon(a) {
-  return L.divIcon({ className: '', html: `<div class="pin" style="background:${a.color}"><span>${a.icon}</span></div>`, iconSize: [34, 34], iconAnchor: [4, 34], popupAnchor: [13, -30] });
+  return L.divIcon({ className: '', html: `<div class="pin" style="background:${safeColor(a.color)}"><span>${esc(a.icon)}</span></div>`, iconSize: [34, 34], iconAnchor: [4, 34], popupAnchor: [13, -30] });
 }
 let mapYear = '';
 function renderMap(v) {
@@ -323,7 +326,7 @@ function renderMap(v) {
     S.tours.filter(t => t.lat != null && t.lon != null && (!mapYear || (t.date || '').startsWith(mapYear))).forEach(t => {
       const a = actById(t.activityId);
       const m = L.marker([t.lat, t.lon], { icon: pinIcon(a) });
-      m.bindPopup(`<div class="pop"><h4>${esc(t.title)}</h4><div class="muted">${a.icon} ${fmtDate(t.date)}</div><div>${tourNums(t)}</div><button class="btn" data-open="${t.id}">${esc(T('open'))}</button></div>`);
+      m.bindPopup(`<div class="pop"><h4>${esc(t.title)}</h4><div class="muted">${esc(a.icon)} ${fmtDate(t.date)}</div><div>${tourNums(t)}</div><button class="btn" data-open="${t.id}">${esc(T('open'))}</button></div>`);
       cluster.addLayer(m); pts.push([t.lat, t.lon]);
     });
     map.addLayer(cluster);
@@ -359,7 +362,7 @@ function pickPosition(lat, lon) {
     const go = h(`<button class="btn pick-go" ${has ? '' : 'disabled'}>${esc(T('pick_apply'))}</button>`);
     L.DomEvent.disableClickPropagation(go);
     el.appendChild(go);
-    const setM = ll => { if (marker) marker.setLatLng(ll); else marker = L.marker(ll, { draggable: true }).addTo(map); go.disabled = false; };
+    const setM = ll => { if (marker) marker.setLatLng(ll); else marker = L.marker(ll, { draggable: true, icon: L.divIcon({ className: '', html: '<div class="pin" style="background:#E63946"><span>📍</span></div>', iconSize: [34, 34], iconAnchor: [4, 34] }) }).addTo(map); go.disabled = false; };
     if (has) setM([lat, lon]);
     map.on('click', e => setM(e.latlng));
     go.onclick = () => { const ll = marker.getLatLng(); result = { lat: +ll.lat.toFixed(6), lon: +ll.lng.toFixed(6) }; closeTop(); };
@@ -379,7 +382,7 @@ async function openDetail(id) {
   const c = pg.content; c.style.padding = '0 0 calc(var(--sb) + 2.5rem)';
   const photos = (await DB.byIndex('photos', 'tourId', id)).sort((x, y) => (x.order || 0) - (y.order || 0));
   const coverId = t.coverId || (photos[0] && photos[0].id);
-  const cover = h(`<div class="cover ${coverId ? '' : 'noimg'}">${coverId ? '' : a.icon}</div>`);
+  const cover = h(`<div class="cover ${coverId ? '' : 'noimg'}">${coverId ? '' : esc(a.icon)}</div>`);
   if (coverId) { thumbUrl(coverId, true).then(u => cover.style.backgroundImage = `url("${u}")`); cover.onclick = () => openViewer(photos, Math.max(0, photos.findIndex(p => p.id === coverId))); }
   c.appendChild(cover);
   const w = h('<div class="wrap" style="padding:0 0.75rem"></div>'); c.appendChild(w);
@@ -391,7 +394,7 @@ async function openDetail(id) {
   if (t.duration) st.push([fmtDuration(t.duration), T('f_duration').split('(')[0].trim()]);
   if (top) st.push([fmtInt(top) + ' m', T('f_summit_alt')]);
   let html = `<div class="dhead" style="padding:0.875rem 0.25rem 0"><h2>${esc(t.title)}</h2>
-    <div class="muted">${a.icon} ${esc(pickName(a))} · ${fmtDate(t.date)}${reg ? ' · ' + esc(pickName(reg)) : ''}</div>
+    <div class="muted">${esc(a.icon)} ${esc(pickName(a))} · ${fmtDate(t.date)}${reg ? ' · ' + esc(pickName(reg)) : ''}</div>
     ${t.rating ? `<div style="color:#F4A261;font-size:1.125rem">${stars(t.rating)}</div>` : ''}
     ${t.summitReached === false ? `<div class="back" style="color:var(--danger)">↩ ${esc(T('turned_back'))}</div>` : ''}</div>`;
   if (st.length) html += `<div class="stats4">${st.map(s => `<div class="stat"><b>${s[0]}</b><small>${esc(s[1])}</small></div>`).join('')}</div>`;
@@ -425,7 +428,7 @@ async function openDetail(id) {
         bounds = line.getBounds();
       }
       if (t.lat != null) L.marker([t.lat, t.lon], { icon: pinIcon(a) }).addTo(mini);
-      (t.summits || []).filter(s => s.lat != null).forEach(s => L.circleMarker([s.lat, s.lon], { radius: 6, color: '#fff', weight: 2, fillColor: '#1D3D47', fillOpacity: 1 }).bindTooltip(s.name).addTo(mini));
+      (t.summits || []).filter(s => s.lat != null).forEach(s => L.circleMarker([s.lat, s.lon], { radius: 6, color: '#fff', weight: 2, fillColor: '#1D3D47', fillOpacity: 1 }).bindTooltip(esc(s.name)).addTo(mini));
       if (bounds) mini.fitBounds(bounds.pad(0.1)); else mini.setView([t.lat, t.lon], 13);
     }, 250);
     if (track && track.pts && track.pts.length > 2 && track.pts[0].length > 2 && track.pts.some(p => p[2] != null)) w.appendChild(profileSvg(track.pts));

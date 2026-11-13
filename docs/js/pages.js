@@ -32,7 +32,7 @@ async function openEdit(id, onSaved) {
   const pg = makePage({ title: T(isNew ? 'new_tour' : 'edit_tour'), back: true, actions: `<button class="tb" id="sv">${esc(T('save'))}</button>` });
   pushPage(pg, { beforeClose: async () => !dirty || await confirmBox(T('discard_question'), T('discard'), T('discard_title'), true) });
   const w = h('<div class="wrap"></div>'); pg.content.appendChild(w);
-  const actOpts = () => S.activities.map(a => `<option value="${a.id}" ${a.id === t.activityId ? 'selected' : ''}>${a.icon} ${esc(pickName(a))}</option>`).join('')
+  const actOpts = () => S.activities.map(a => `<option value="${a.id}" ${a.id === t.activityId ? 'selected' : ''}>${esc(a.icon)} ${esc(pickName(a))}</option>`).join('')
     + `<option value="new">➕ ${esc(T('activity_add_own'))}</option><option value="manage">⚙️ ${esc(T('activity_manage'))}</option>`;
   const v = x => x == null ? '' : x;
   /* optionale Bereiche: je nach Einstellung auf- oder zugeklappt */
@@ -246,7 +246,7 @@ async function openEdit(id, onSaved) {
     if (!E('e_title').value.trim() && g.name) E('e_title').value = g.name;
     touch(); drawPos(); drawGpxState();
     toast(T('gpx_applied'), 3000);
-    if (!t.summits.length && g.hasEle) detect(true);
+    if (!t.summits.length && g.hasEle && S.autoSummits) detect(true);
   };
 
   /* --- Fotos */
@@ -338,7 +338,7 @@ async function openEdit(id, onSaved) {
       dirty = false;
       toast('✓ ' + T('saved'));
       const before = new Set(evaluateBadges(S.tours, S.activities).filter(b => b.earned).map(b => b.key));
-      S.tours = await DB.all('tours');
+      S.tours = (await DB.all('tours')).map(cleanTour);
       const fresh = evaluateBadges(S.tours, S.activities).filter(b => b.earned && !before.has(b.key));
       popSilently();
       if (onSaved) onSaved(tid); else { renderTab(); if (isNew) setTimeout(() => openDetail(tid), 60); }
@@ -391,7 +391,7 @@ function renderStats(v) {
   tours.forEach(t => { const o = byAct[t.activityId] || (byAct[t.activityId] = { n: 0, asc: 0 }); o.n++; o.asc += t.ascent || 0; });
   const actRows = Object.entries(byAct).sort((a, b) => b[1].n - a[1].n);
   const maxN = Math.max(...actRows.map(r => r[1].n));
-  html += `<div class="sec">${esc(T('st_by_activity'))}</div><div class="card">${actRows.map(([id, o]) => { const a = actById(+id); return `<div class="hbar"><span class="lab">${a.icon} ${esc(pickName(a))}</span><span class="trk"><i style="width:${o.n / maxN * 100}%;background:${a.color}"></i></span><span class="val">${o.n} · ${fmtInt(o.asc)} m</span></div>`; }).join('')}</div>`;
+  html += `<div class="sec">${esc(T('st_by_activity'))}</div><div class="card">${actRows.map(([id, o]) => { const a = actById(+id); return `<div class="hbar"><span class="lab">${esc(a.icon)} ${esc(pickName(a))}</span><span class="trk"><i style="width:${o.n / maxN * 100}%;background:${safeColor(a.color)}"></i></span><span class="val">${o.n} · ${fmtInt(o.asc)} m</span></div>`; }).join('')}</div>`;
   /* pro Monat (Jahr) oder pro Jahr (alle) */
   let bars;
   if (S.statYear) {
@@ -436,7 +436,7 @@ function renderStats(v) {
       $('#rk', sb).innerHTML = show.map((r, i) => `<div class="rank" data-open="${r.tour.id}"><span class="n">${i + 1}.</span><div class="grow">
         <div class="row"><b class="grow">${esc(r.summits[0].name)}</b><span class="alt">${fmtInt(r.summits[0].alt)} m</span></div>
         ${r.summits.slice(1).map(s => `<div class="row sub2"><span class="grow">+ ${esc(s.name)}</span><span>${fmtInt(s.alt)} m</span></div>`).join('')}
-        <div class="small muted">${actById(r.tour.activityId).icon} ${fmtDate(r.tour.date)} · ${esc(r.tour.title)}</div></div></div>`).join('')
+        <div class="small muted">${esc(actById(r.tour.activityId).icon)} ${fmtDate(r.tour.date)} · ${esc(r.tour.title)}</div></div></div>`).join('')
         + (ranking.length > 10 ? `<button class="btn sec2 block" id="rkm" style="margin-top:0.5rem">${esc(all ? T('show_less') : fill(T('show_all'), { n: ranking.length }))}</button>` : '');
       $$('#rk [data-open]', sb).forEach(el => el.onclick = () => openDetail(+el.dataset.open));
       const m = $('#rkm', sb); if (m) m.onclick = () => { all = !all; drawRank(); };
@@ -526,7 +526,11 @@ function openSettings() {
       <div class="small muted" style="margin:-0.25rem 0.25rem 0">${esc(T('settings_form_hint'))}</div>
       <div class="sec">${esc(T('settings_general'))}</div><div class="list">
         ${item('s_lang', '🌐', T('language'), LANG_NAMES[I18N.code])}
-        ${toggle('s_bak', '💾', T('settings_backup_reminder'), S.backupReminder)}</div></div>`;
+        ${toggle('s_bak', '💾', T('settings_backup_reminder'), S.backupReminder)}</div>
+      <div class="sec">${esc(T('settings_privacy'))}</div><div class="list">
+        ${toggle('s_sum', '⛰️', T('settings_auto_summits'), S.autoSummits)}
+        <div class="item" id="s_priv"><span class="ic">🔒</span><div class="grow">${esc(T('privacy_info'))}</div><span class="chev">›</span></div></div>
+      <div class="small muted" style="margin:-0.25rem 0.25rem 0">${esc(T('settings_auto_summits_hint'))}</div></div>`;
     const c = pg.content;
     $('#s_font', c).onclick = async () => {
       const keys = ['system', 'atkinson', 'nunito', 'lato', 'serif'];
@@ -548,6 +552,8 @@ function openSettings() {
       await DB.kvSet('lang', v); await loadLang(v); document.title = T('app_name'); buildTabs(); draw();
     };
     $('#s_bak', c).onchange = async e => { S.backupReminder = e.target.checked; await DB.kvSet('backupReminder', S.backupReminder); };
+    $('#s_sum', c).onchange = async e => { S.autoSummits = e.target.checked; await DB.kvSet('autoSummits', S.autoSummits); };
+    $('#s_priv', c).onclick = () => openHelp('privacy');
   };
   draw();
 }
@@ -559,7 +565,7 @@ function openManageActivities(onClose) {
   const draw = () => {
     const used = id => S.tours.filter(t => t.activityId === id).length;
     pg.content.innerHTML = `<div class="wrap"><button class="btn block" id="a_new" style="margin-bottom:0.75rem">＋ ${esc(T('activity_new'))}</button><div class="list">${S.activities.map(a => `<div class="item" data-id="${a.id}">
-      <span class="ic" style="background:${a.color}22;border-radius:0.625rem">${a.icon}</span><div class="grow">${esc(pickName(a))}<div class="small muted">${esc(Grades.groupLabel(a.scales))} · ${used(a.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
+      <span class="ic" style="background:${safeColor(a.color)}22;border-radius:0.625rem">${esc(a.icon)}</span><div class="grow">${esc(pickName(a))}<div class="small muted">${esc(Grades.groupLabel(a.scales))} · ${used(a.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
     $('#a_new', pg.content).onclick = async () => { if (await editActivity(null)) draw(); };
     $$('[data-id]', pg.content).forEach(el => el.onclick = async () => { await editActivity(S.activities.find(a => a.id === +el.dataset.id)); draw(); });
   };
@@ -688,7 +694,7 @@ async function bulkGpxImport() {
       ascent: g.hasEle ? Math.round(g.ascent) : null, descent: g.hasEle ? Math.round(g.descent) : null, distance: +g.distanceKm.toFixed(2),
       summitAlt: g.hasEle ? Math.round(g.maxEle) : null, duration: g.durationMin, grade: '', avalanche: 0, weather: '', summitReached: true, rating: 0,
       conditions: '', features: '', description: '', persons: [], summits: [], coverId: null, hasTrack: true, gpxName: g.name, created: Date.now(), updated: Date.now() };
-    if (online && g.hasEle) {
+    if (online && g.hasEle && S.autoSummits) {
       const res = await lookupPeaks(findPeaks(g));
       if (res.error) online = false;
       res.filter(s => s.name).forEach(s => { if (!t.summits.some(x => x.name === s.name)) t.summits.push({ name: s.name, alt: s.alt, lat: s.lat, lon: s.lon }); });
@@ -710,7 +716,24 @@ async function bulkGpxImport() {
 
 /* ------------------------------------------------------------------ Backup (JSON mit Fotos) */
 const blobToDataUrl = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(b); });
+/* Passwort-Abfrage: confirm = beim Erstellen (zweimal, leer = ohne Verschlüsselung). Liefert Passwort, '' oder null (Abbruch). */
+function askPassword(confirm) {
+  const html = `<p class="small" style="white-space:pre-line;margin-top:0">${esc(T(confirm ? 'backup_pw_hint' : 'restore_pw_hint'))}</p>
+    <div class="field"><input class="inp" type="password" id="pw1" autocomplete="new-password" placeholder="${esc(T('backup_pw'))}"></div>
+    ${confirm ? `<div class="field"><input class="inp" type="password" id="pw2" autocomplete="new-password" placeholder="${esc(T('backup_pw_repeat'))}"></div>` : ''}`;
+  return dialog({ title: confirm ? '💾 ' + T('backup') : '🔒 ' + T('backup_restore'), html,
+    buttons: [{ label: T('cancel'), value: null }, { label: 'OK', check: ovl => {
+      const a = $('#pw1', ovl).value, b2 = confirm ? $('#pw2', ovl).value : a;
+      if (!confirm) return a.length > 0;
+      if (a !== b2) { toast(T('backup_pw_mismatch')); return false; }
+      if (a && a.length < 6) { toast(T('backup_pw_short')); return false; }
+      return true;
+    }, value: ovl => $('#pw1', ovl).value }],
+    onOpen: ovl => setTimeout(() => $('#pw1', ovl).focus(), 60) });
+}
 async function exportBackup() {
+  const pw = await askPassword(true);
+  if (pw === null) return;
   const b = busy(T('backup_working'));
   try {
     const tours = await DB.all('tours'), tracks = await DB.all('tracks');
@@ -724,8 +747,13 @@ async function exportBackup() {
       parts.push((i ? ',' : '') + JSON.stringify({ id: p.id, tourId: p.tourId, order: p.order || 0, lat: p.lat, lon: p.lon, takenAt: p.takenAt || '', blob: await blobToDataUrl(p.blob), thumb: await blobToDataUrl(p.thumb) }));
     }
     parts.push(']}');
-    const name = 'bergtagebuch_' + todayIso() + '.json';
-    const file = new File(parts, name, { type: 'application/json' });
+    let name = 'bergtagebuch_' + todayIso() + '.json';
+    let file = new File(parts, name, { type: 'application/json' });
+    if (pw) {
+      b.set('🔒 ' + T('backup_working'));
+      name = 'bergtagebuch_' + todayIso() + '.btenc';
+      file = new File([await encryptBlob(file, pw)], name, { type: 'application/octet-stream' });
+    }
     b.close();
     let shared = false;
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -747,10 +775,18 @@ async function exportBackup() {
   }
 }
 async function importBackup() {
-  const files = await pickFiles(isIOS() ? '' : '.json,application/json', false);
+  const files = await pickFiles(isIOS() ? '' : '.json,.btenc,application/json,application/octet-stream', false);
   if (!files.length) return;
-  let data;
-  try { data = JSON.parse(await files[0].text()); } catch (e) { data = null; }
+  let data, text = null;
+  if (await isEncryptedFile(files[0])) {
+    const pw = await askPassword(false);
+    if (!pw) return;
+    const bd = busy(T('restore_working'));
+    text = await decryptFile(files[0], pw);
+    bd.close();
+    if (text === null) { alertBox(T('restore_wrong_pw')); return; }
+  }
+  try { data = JSON.parse(text !== null ? text : await files[0].text()); } catch (e) { data = null; }
   if (!data || data.app !== 'bergtagebuch-web' || !Array.isArray(data.tours)) {
     alertBox(T('restore_invalid') + (files[0].name.toLowerCase().endsWith('.zip') ? '\n\n' + T('web_android_backup') : ''));
     return;
@@ -760,14 +796,17 @@ async function importBackup() {
   try {
     for (const st of ['tours', 'photos', 'tracks']) await DB.clear(st);
     ThumbCache.forEach(u => URL.revokeObjectURL(u)); ThumbCache.clear();
-    for (const t of data.tours) await DB.put('tours', t);
-    for (const t of data.tracks || []) await DB.put('tracks', t);
-    if (data.activities) await DB.kvSet('activities', data.activities);
-    if (data.regions) await DB.kvSet('regions', data.regions);
+    /* alles prüfen und bereinigen, bevor es gespeichert wird */
+    for (const t of data.tours) { const c = cleanTour(t); if (c.id) await DB.put('tours', c); }
+    for (const t of data.tracks || []) { const c = cleanTrack(t); if (c.tourId) await DB.put('tracks', c); }
+    if (Array.isArray(data.activities)) await DB.kvSet('activities', data.activities.map(cleanActivity).filter(a => a.id));
+    if (Array.isArray(data.regions)) await DB.kvSet('regions', data.regions.map(cleanRegion).filter(r => r.id));
     const ph = data.photos || [];
     for (let i = 0; i < ph.length; i++) {
       b.set(T('restore_working') + ' ' + (i + 1) + '/' + ph.length);
       const p = ph[i];
+      /* nur eingebettete Bilder zulassen, keine Adressen im Internet */
+      if (!/^data:image\/(jpeg|png|webp);base64,/.test(String(p.blob)) || !/^data:image\/(jpeg|png|webp);base64,/.test(String(p.thumb))) continue;
       await DB.put('photos', { id: p.id, tourId: p.tourId, order: p.order || 0, lat: p.lat, lon: p.lon, takenAt: p.takenAt,
         blob: await (await fetch(p.blob)).blob(), thumb: await (await fetch(p.thumb)).blob() });
     }

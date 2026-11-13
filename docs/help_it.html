@@ -22,7 +22,7 @@
 </head>
 <body>
 <h1 id="start">Bergtagebuch – Aiuto</h1>
-<div class="toc"><a href="#install">Installare su iPhone</a><a href="#edit">Registrare un'escursione</a><a href="#gpx">GPX da Komoot, Strava, Garmin</a><a href="#summits">Cime</a><a href="#photos">Foto</a><a href="#map">Mappa</a><a href="#stats">Statistiche e traguardi</a><a href="#settings">Impostazioni</a><a href="#backup">Dati e backup</a><a href="#update">Aggiornamenti</a><a href="#support">Sostenere</a></div>
+<div class="toc"><a href="#install">Installare su iPhone</a><a href="#edit">Registrare un'escursione</a><a href="#gpx">GPX da Komoot, Strava, Garmin</a><a href="#summits">Cime</a><a href="#photos">Foto</a><a href="#map">Mappa</a><a href="#stats">Statistiche e traguardi</a><a href="#settings">Impostazioni</a><a href="#backup">Dati e backup</a><a href="#privacy">Privacy</a><a href="#update">Aggiornamenti</a><a href="#support">Sostenere</a></div>
 <h2 id="install">Installare su iPhone</h2>
 <p>Il Bergtagebuch per iPhone e iPad è una web app. Non si scarica dall'App Store, ma si aggiunge alla schermata Home direttamente da Safari:</p>
 <ol><li>Apri la pagina in <b>Safari</b>.</li><li>Tocca <b>Condividi</b> ⬆️ in basso.</li><li>Scegli <b>Aggiungi alla schermata Home</b> e tocca <b>Aggiungi</b>.</li></ol>
@@ -70,6 +70,19 @@
 <div class="warn"><b>Fai regolarmente un backup!</b> I dati si perdono se nelle impostazioni dell'iPhone cancelli i dati dei siti di Safari, rimuovi l'icona dalla schermata Home o cambi dispositivo.</div>
 <p><b>Altro → Crea backup</b> genera un file <i>bergtagebuch_DATA.json</i> con tutte le escursioni, tracce e foto. Salvalo con <i>Salva in File</i> su iCloud Drive o invialo a te stesso. Con <b>Ripristina backup</b> lo reimporti, anche su un altro dispositivo o sul computer.</p>
 <p>I backup dell'app Android (ZIP) e della web app (JSON) hanno formati diversi e non sono intercambiabili.</p>
+<h2 id="privacy">Privacy</h2>
+<p>Il Bergtagebuch non ha account, server propri, pubblicità né servizi di statistica. Escursioni, foto e tracce restano sul tuo dispositivo.</p>
+<p>Cosa invia l'app e a chi:</p>
+<ul>
+  <li><b>Mappe:</b> le immagini della mappa arrivano dal servizio scelto (OpenTopoMap, OpenStreetMap, CyclOSM, Esri, CARTO o il Geoportale della Provincia di Bolzano). Il servizio vede il tuo indirizzo IP e la zona che guardi, ma nessun dato delle escursioni.</li>
+  <li><b>Nomi delle cime:</b> per riconoscere le cime vengono inviate a OpenStreetMap (Overpass) solo le coordinate delle possibili cime. In <i>Impostazioni → Cerca cime automaticamente</i> puoi disattivarlo; allora succede solo quando tocchi <i>Riconosci</i> o <i>Vicino</i>.</li>
+  <li><b>Web app:</b> la pagina viene fornita tramite GitHub Pages. Come ogni sito, GitHub vede il tuo indirizzo IP.</li>
+  <li><b>Memoria:</b> i dati sono nella memoria del browser su questo dispositivo e la lasciano solo se crei e condividi un backup.</li>
+  <li><b>Posizione:</b> viene richiesta solo quando tocchi 📍.</li>
+  <li><b>Ko-fi:</b> si apre solo se lo tocchi tu.</li>
+  <li><b>Le foto</b> vengono salvate di nuovo quando le aggiungi; così spariscono dal file i dati della fotocamera e la posizione GPS.</li>
+  <li><b>I backup</b> contengono tutte le escursioni con posizioni, foto e compagni. Se imposti una password, il file viene cifrato (AES-256). Senza la password non si può più aprire – nemmeno da te.</li>
+</ul>
 <h2 id="update">Aggiornamenti</h2>
 <p>A ogni avvio la web app controlla se c'è una nuova versione e chiede se ricaricare. I tuoi dati restano.</p>
 <h2 id="support">Sostenere</h2>

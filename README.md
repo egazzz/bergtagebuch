@@ -100,11 +100,12 @@ All tours on one map with pins in the activity colour, built with Leaflet and Ma
 - **Text and app size:** 100 %, 115 %, 125 % or 150 %; text, buttons and spacing grow throughout the app
 - **Tour form:** optional sections (rating and weather, difficulty, companions, starting point and position, description and conditions) can always be expanded, always collapsed to show only the essentials, or kept as they were last time. A collapsed section shows how many fields are filled in.
 - Language, update check at start (Android) and backup reminder
+- Privacy: automatic summit lookup can be switched off
 
 ### App
 
 - Manage activities, regions and companions
-- Backup and restore of all tours, photos and tracks
+- Backup and restore of all tours, photos and tracks, optionally encrypted with a password (AES-256)
 - Built-in help in German, Italian and English
 - Updates: the Android app checks this repository's GitHub releases at every start; the web app updates itself
 - Diagnostic report and crash log (Android)
@@ -218,13 +219,29 @@ The app treats such a release as an update when its version is higher than the i
 1. Upload the changed files in `docs/`.
 2. Increase `VERSION` in `docs/sw.js`, otherwise installed copies keep the old files.
 
-## Privacy
+## Privacy and security
 
-- Tours, photos and tracks are stored only on the device.
-- Map tiles are loaded from the selected tile provider. Only the visible map area is requested, never any tour data.
-- Summit names come from the OpenStreetMap Overpass API. Only the coordinates of possible summits are sent.
-- Location is only read when you tap *My location*.
-- At every start the Android app asks the GitHub API for the latest version number. No personal data is sent.
+Bergtagebuch has no account, no server of its own, no ads and no analytics. Tours, photos and tracks are stored only on the device.
+
+What leaves the device:
+
+| What | Where to | When |
+|---|---|---|
+| Map area being viewed and IP address | Selected map service (OpenTopoMap, OpenStreetMap, CyclOSM, Esri, CARTO, South Tyrol geoportal) | While the map is shown |
+| Coordinates of possible summits | OpenStreetMap Overpass API | GPX import (can be switched off in *Settings → Look up summits automatically*) or when tapping *Detect* / *Nearby* |
+| Request for the latest version number | GitHub API | At start of the Android app (can be switched off) |
+| Your location | – (only used on the device) | Only when tapping *My location* |
+
+Security measures:
+
+- **Encrypted backups (optional):** with a password, backups are encrypted with AES-256. Android: AES-256-CTR with HMAC-SHA256 (encrypt-then-MAC), key from PBKDF2-HMAC-SHA256. Web app: AES-256-GCM with PBKDF2-HMAC-SHA256 (250,000 iterations).
+- **Photos without metadata:** photos are re-encoded on import, which removes EXIF data including the GPS position.
+- **Safe restore:** restored data is validated (Android: protection against "Zip Slip"; web app: every field is checked and cleaned, and only embedded images are accepted).
+- **Web app:** strict Content Security Policy, and all user data is HTML-escaped.
+- **Updates (Android):** downloaded over HTTPS from GitHub Releases only; Android installs them only if they are signed with the same key.
+- **Diagnostic report:** only created when you trigger it; it contains no tour names, places or companions.
+
+On Android, the system may back up app data to the user's Google account (Android auto backup). This can be controlled in the Android settings.
 
 ## Support
 

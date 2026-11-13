@@ -22,7 +22,7 @@
 </head>
 <body>
 <h1 id="start">Bergtagebuch – Hilfe</h1>
-<div class="toc"><a href="#install">Auf dem iPhone installieren</a><a href="#edit">Tour erfassen</a><a href="#gpx">GPX aus Komoot, Strava, Garmin</a><a href="#summits">Gipfel</a><a href="#photos">Fotos</a><a href="#map">Karte</a><a href="#stats">Statistik und Erfolge</a><a href="#settings">Einstellungen</a><a href="#backup">Daten und Backup</a><a href="#update">Updates</a><a href="#support">Unterstützen</a></div>
+<div class="toc"><a href="#install">Auf dem iPhone installieren</a><a href="#edit">Tour erfassen</a><a href="#gpx">GPX aus Komoot, Strava, Garmin</a><a href="#summits">Gipfel</a><a href="#photos">Fotos</a><a href="#map">Karte</a><a href="#stats">Statistik und Erfolge</a><a href="#settings">Einstellungen</a><a href="#backup">Daten und Backup</a><a href="#privacy">Datenschutz</a><a href="#update">Updates</a><a href="#support">Unterstützen</a></div>
 <h2 id="install">Auf dem iPhone installieren</h2>
 <p>Das Bergtagebuch für iPhone und iPad ist eine Web-App. Sie wird nicht aus dem App Store geladen, sondern direkt aus Safari auf den Home-Bildschirm gelegt:</p>
 <ol><li>Die Seite in <b>Safari</b> öffnen.</li><li>Unten auf <b>Teilen</b> ⬆️ tippen.</li><li><b>Zum Home-Bildschirm</b> wählen und <b>Hinzufügen</b> tippen.</li></ol>
@@ -70,6 +70,19 @@
 <div class="warn"><b>Mach regelmäßig ein Backup!</b> Die Daten gehen verloren, wenn du in den iPhone-Einstellungen die Safari-Websitedaten löschst, das Symbol vom Home-Bildschirm entfernst oder das Gerät wechselst.</div>
 <p><b>Mehr → Backup erstellen</b> erzeugt eine Datei <i>bergtagebuch_DATUM.json</i> mit allen Touren, Tracks und Fotos. Speichere sie mit <i>In Dateien sichern</i> in iCloud Drive oder sende sie dir selbst. Mit <b>Backup wiederherstellen</b> spielst du sie wieder ein, auch auf einem anderen Gerät oder am Computer.</p>
 <p>Backups der Android-App (ZIP) und der Web-App (JSON) haben unterschiedliche Formate und sind nicht untereinander austauschbar.</p>
+<h2 id="privacy">Datenschutz</h2>
+<p>Das Bergtagebuch hat kein Konto, keinen eigenen Server, keine Werbung und keine Statistik-Dienste. Deine Touren, Fotos und Tracks bleiben auf deinem Gerät.</p>
+<p>Was die App wohin sendet:</p>
+<ul>
+  <li><b>Karten:</b> Die Kartenbilder kommen vom gewählten Kartendienst (OpenTopoMap, OpenStreetMap, CyclOSM, Esri, CARTO oder das Geoportal des Landes Südtirol). Der Dienst sieht deine IP-Adresse und welchen Kartenausschnitt du ansiehst, aber keine Tourdaten.</li>
+  <li><b>Gipfelnamen:</b> Zum Erkennen von Gipfeln werden nur die Koordinaten der möglichen Gipfel an OpenStreetMap (Overpass) geschickt. Unter <i>Einstellungen → Gipfel automatisch suchen</i> kannst du das abschalten; dann passiert es nur, wenn du auf <i>Erkennen</i> oder <i>Nähe</i> tippst.</li>
+  <li><b>Web-App:</b> Die Seite wird über GitHub Pages ausgeliefert. GitHub sieht dabei wie jede Webseite deine IP-Adresse.</li>
+  <li><b>Speicher:</b> Die Daten liegen im Speicher des Browsers auf diesem Gerät und verlassen ihn nur, wenn du ein Backup erstellst und weitergibst.</li>
+  <li><b>Standort:</b> wird nur abgefragt, wenn du auf 📍 tippst.</li>
+  <li><b>Ko-fi:</b> wird nur geöffnet, wenn du es selbst antippst.</li>
+  <li><b>Fotos</b> werden beim Hinzufügen neu gespeichert. Dabei fallen Kameradaten und GPS-Position aus der Bilddatei weg.</li>
+  <li><b>Backups</b> enthalten alle Touren mit Positionen, Fotos und Begleitern. Vergib beim Erstellen ein Passwort, dann wird die Datei verschlüsselt (AES-256). Ohne das Passwort lässt sie sich nicht mehr öffnen – auch nicht von dir.</li>
+</ul>
 <h2 id="update">Updates</h2>
 <p>Die Web-App prüft bei jedem Start, ob es eine neue Version gibt, und fragt dann, ob sie neu laden soll. Deine Daten bleiben dabei erhalten.</p>
 <h2 id="support">Unterstützen</h2>

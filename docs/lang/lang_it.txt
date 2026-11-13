@@ -384,3 +384,15 @@ grp_place=Partenza e posizione
 grp_texts=Descrizione e condizioni
 grp_filled={n} compilati
 settings_size_hint=Ingrandisce testo, pulsanti e spazi in tutta l'app.
+# Einstellungen
+backup_pw=Password (facoltativa)
+backup_pw_repeat=Ripeti password
+backup_pw_hint=Con una password il backup viene cifrato (AES-256). Senza password chiunque riceva il file può aprirlo. Lasciare vuoto = senza cifratura.\nImportante: senza la password un backup cifrato non può essere ripristinato.
+backup_pw_mismatch=Le password non coincidono.
+backup_pw_short=La password deve avere almeno 6 caratteri.
+restore_pw_hint=Questo backup è cifrato. Inserisci la password.
+restore_wrong_pw=Password errata o file danneggiato.
+settings_privacy=Privacy
+settings_auto_summits=Cerca cime automaticamente
+settings_auto_summits_hint=Durante l'importazione GPX le coordinate delle possibili cime vengono inviate a OpenStreetMap (Overpass) per trovarne i nomi. Se disattivato, succede solo quando tocchi „Riconosci“ o „Vicino“.
+privacy_info=Cosa invia l'app e a chi

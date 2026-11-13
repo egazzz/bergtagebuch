@@ -22,7 +22,7 @@
 </head>
 <body>
 <h1 id="start">Bergtagebuch – Help</h1>
-<div class="toc"><a href="#install">Install on iPhone</a><a href="#edit">Log a tour</a><a href="#gpx">GPX from Komoot, Strava, Garmin</a><a href="#summits">Summits</a><a href="#photos">Photos</a><a href="#map">Map</a><a href="#stats">Statistics and badges</a><a href="#settings">Settings</a><a href="#backup">Data and backup</a><a href="#update">Updates</a><a href="#support">Support</a></div>
+<div class="toc"><a href="#install">Install on iPhone</a><a href="#edit">Log a tour</a><a href="#gpx">GPX from Komoot, Strava, Garmin</a><a href="#summits">Summits</a><a href="#photos">Photos</a><a href="#map">Map</a><a href="#stats">Statistics and badges</a><a href="#settings">Settings</a><a href="#backup">Data and backup</a><a href="#privacy">Privacy</a><a href="#update">Updates</a><a href="#support">Support</a></div>
 <h2 id="install">Install on iPhone</h2>
 <p>Bergtagebuch for iPhone and iPad is a web app. It does not come from the App Store; you add it to your Home Screen straight from Safari:</p>
 <ol><li>Open the page in <b>Safari</b>.</li><li>Tap <b>Share</b> ⬆️ at the bottom.</li><li>Choose <b>Add to Home Screen</b> and tap <b>Add</b>.</li></ol>
@@ -70,6 +70,19 @@
 <div class="warn"><b>Make backups regularly!</b> The data is lost if you clear Safari website data in the iPhone settings, remove the icon from the Home Screen or switch devices.</div>
 <p><b>More → Create backup</b> creates a file <i>bergtagebuch_DATE.json</i> with all tours, tracks and photos. Save it with <i>Save to Files</i> to iCloud Drive or send it to yourself. <b>Restore backup</b> brings it back, also on another device or a computer.</p>
 <p>Backups of the Android app (ZIP) and the web app (JSON) use different formats and cannot be swapped.</p>
+<h2 id="privacy">Privacy</h2>
+<p>Bergtagebuch has no account, no server of its own, no ads and no analytics. Your tours, photos and tracks stay on your device.</p>
+<p>What the app sends where:</p>
+<ul>
+  <li><b>Maps:</b> map images come from the selected map service (OpenTopoMap, OpenStreetMap, CyclOSM, Esri, CARTO or the South Tyrol geoportal). The service sees your IP address and which map area you view, but no tour data.</li>
+  <li><b>Summit names:</b> to detect summits, only the coordinates of possible summits are sent to OpenStreetMap (Overpass). You can switch this off under <i>Settings → Look up summits automatically</i>; it then only happens when you tap <i>Detect</i> or <i>Nearby</i>.</li>
+  <li><b>Web app:</b> the page is served by GitHub Pages. Like any website, GitHub sees your IP address.</li>
+  <li><b>Storage:</b> the data lives in this browser's storage on this device and only leaves it when you create and pass on a backup.</li>
+  <li><b>Location:</b> is only requested when you tap 📍.</li>
+  <li><b>Ko-fi:</b> only opens when you tap it yourself.</li>
+  <li><b>Photos</b> are saved anew when you add them, which removes camera data and the GPS position from the image file.</li>
+  <li><b>Backups</b> contain all tours with positions, photos and companions. Set a password when creating one and the file is encrypted (AES-256). Without the password it cannot be opened again – not even by you.</li>
+</ul>
 <h2 id="update">Updates</h2>
 <p>The web app checks for a new version on every start and asks whether to reload. Your data is kept.</p>
 <h2 id="support">Support</h2>

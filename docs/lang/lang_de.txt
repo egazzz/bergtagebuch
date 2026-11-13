@@ -386,3 +386,15 @@ grp_place=Startpunkt & Position
 grp_texts=Beschreibung & Verhältnisse
 grp_filled={n} ausgefüllt
 settings_size_hint=Vergrößert Schrift, Knöpfe und Abstände in der ganzen App.
+# Einstellungen
+backup_pw=Passwort (optional)
+backup_pw_repeat=Passwort wiederholen
+backup_pw_hint=Mit einem Passwort wird das Backup verschlüsselt (AES-256). Ohne Passwort kann es jeder öffnen, der die Datei bekommt. Leer lassen = ohne Verschlüsselung.\nWichtig: Ohne das Passwort lässt sich ein verschlüsseltes Backup nicht wiederherstellen.
+backup_pw_mismatch=Die Passwörter stimmen nicht überein.
+backup_pw_short=Das Passwort muss mindestens 6 Zeichen lang sein.
+restore_pw_hint=Dieses Backup ist verschlüsselt. Bitte das Passwort eingeben.
+restore_wrong_pw=Falsches Passwort oder beschädigte Datei.
+settings_privacy=Datenschutz
+settings_auto_summits=Gipfel automatisch suchen
+settings_auto_summits_hint=Beim GPX-Import werden die Koordinaten möglicher Gipfel an OpenStreetMap (Overpass) geschickt, um Namen zu finden. Ausgeschaltet passiert das nur, wenn du auf „Erkennen“ oder „Nähe“ tippst.
+privacy_info=Was die App wohin sendet

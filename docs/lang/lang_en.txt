@@ -370,3 +370,15 @@ grp_place=Starting point & position
 grp_texts=Description & conditions
 grp_filled={n} filled in
 settings_size_hint=Enlarges text, buttons and spacing throughout the app.
+# Einstellungen
+backup_pw=Password (optional)
+backup_pw_repeat=Repeat password
+backup_pw_hint=With a password the backup is encrypted (AES-256). Without one, anybody who gets the file can open it. Leave empty = no encryption.\nImportant: an encrypted backup cannot be restored without the password.
+backup_pw_mismatch=The passwords do not match.
+backup_pw_short=The password must be at least 6 characters long.
+restore_pw_hint=This backup is encrypted. Please enter the password.
+restore_wrong_pw=Wrong password or damaged file.
+settings_privacy=Privacy
+settings_auto_summits=Look up summits automatically
+settings_auto_summits_hint=When importing GPX, the coordinates of possible summits are sent to OpenStreetMap (Overpass) to find their names. When switched off, this only happens when you tap "Detect" or "Nearby".
+privacy_info=What the app sends where

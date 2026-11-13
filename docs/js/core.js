@@ -1,7 +1,7 @@
 /* Bergtagebuch Web – Kern: Daten (IndexedDB), Sprachen, Skalen, GPX, Gipfelsuche, Statistik, Erfolge */
 'use strict';
 
-const APP_VERSION = '1.8.0';
+const APP_VERSION = '1.8.1';
 const KOFI_URL = 'https://ko-fi.com/egazzz';
 const OVERPASS = 'https://overpass-api.de/api/interpreter';
 
@@ -110,6 +110,62 @@ const ICONS = ['🏃', '⛷️', '🏂', '🥾', '⛰️', '🧗', '🎿', '🚵
 const COLORS = [['color_teal', '#00897B'], ['color_green', '#2E7D32'], ['color_blue', '#1565C0'], ['color_orange', '#EF6C00'], ['color_lightblue', '#0288D1'],
   ['color_brown', '#6D4C41'], ['color_red', '#C62828'], ['color_purple', '#6A1B9A'], ['color_gray', '#546E7A']];
 const WEATHER = { sun: '☀️', cloud: '⛅', rain: '🌧️', snow: '❄️', fog: '🌫️', wind: '💨' };
+
+/* ------------------------------------------------------------------ Daten prüfen (Schutz vor manipulierten Backups) */
+const safeColor = c => /^#[0-9a-fA-F]{6}$/.test(String(c)) ? c : '#546E7A';
+const safeIcon = i => (typeof i === 'string' && i.length > 0 && i.length <= 8 && !/[<>&"'`\\=]/.test(i)) ? i : '🏷️';
+const str = (v, max = 5000) => v == null ? '' : String(v).slice(0, max);
+const numOrNull = v => { const n = Number(v); return v == null || v === '' || !isFinite(n) ? null : n; };
+const intIn = (v, lo, hi, def = 0) => { const n = Math.round(Number(v)); return isFinite(n) && n >= lo && n <= hi ? n : def; };
+const isoDate = d => /^\d{4}-\d{2}-\d{2}$/.test(String(d)) ? String(d) : todayIso();
+const coord = (v, lim) => { const n = numOrNull(v); return n != null && Math.abs(n) <= lim ? n : null; };
+function cleanActivity(a) {
+  return { id: intIn(a.id, 1, 1e9, 0), name_de: str(a.name_de, 80), name_it: str(a.name_it, 80), name_en: str(a.name_en, 80),
+    icon: safeIcon(a.icon), color: safeColor(a.color), scales: Grades.scalesFor(a.scales).join(','), builtin: !!a.builtin };
+}
+function cleanRegion(r) { return { id: intIn(r.id, 1, 1e9, 0), name_de: str(r.name_de, 80), name_it: str(r.name_it, 80), name_en: str(r.name_en, 80) }; }
+function cleanTour(t) {
+  const lat = coord(t.lat, 90), lon = coord(t.lon, 180);
+  return { ...t, id: t.id == null ? undefined : intIn(t.id, 1, 1e12, undefined), date: isoDate(t.date), title: str(t.title, 300) || '?',
+    activityId: intIn(t.activityId, 1, 1e9, 1), regionId: t.regionId == null ? null : intIn(t.regionId, 1, 1e9, null),
+    start: str(t.start, 300), lat: lat != null && lon != null ? lat : null, lon: lat != null && lon != null ? lon : null,
+    ascent: numOrNull(t.ascent), descent: numOrNull(t.descent), distance: numOrNull(t.distance), summitAlt: numOrNull(t.summitAlt),
+    duration: intIn(t.duration, 0, 100000, 0), grade: str(t.grade, 40), avalanche: intIn(t.avalanche, 0, 5, 0),
+    weather: Object.prototype.hasOwnProperty.call(WEATHER, t.weather) ? t.weather : '', summitReached: t.summitReached !== false,
+    rating: intIn(t.rating, 0, 5, 0), conditions: str(t.conditions), features: str(t.features), description: str(t.description, 20000),
+    persons: Array.isArray(t.persons) ? t.persons.map(p => str(p, 80)).filter(Boolean) : [],
+    summits: Array.isArray(t.summits) ? t.summits.filter(s => s && s.name).map(s => ({ name: str(s.name, 120), alt: intIn(s.alt, 0, 9000, 0), lat: coord(s.lat, 90), lon: coord(s.lon, 180) })) : [],
+    coverId: t.coverId == null ? null : intIn(t.coverId, 1, 1e12, null), hasTrack: !!t.hasTrack, gpxName: str(t.gpxName, 300) };
+}
+function cleanTrack(tr) {
+  return { tourId: intIn(tr.tourId, 1, 1e12, 0), pts: Array.isArray(tr.pts) ? tr.pts.filter(p => Array.isArray(p) && coord(p[0], 90) != null && coord(p[1], 180) != null)
+    .map(p => [Number(p[0]), Number(p[1]), numOrNull(p[2])]) : [] };
+}
+
+/* ------------------------------------------------------------------ Backup verschlüsseln (AES-256-GCM, Schlüssel per PBKDF2) */
+const ENC_MAGIC = 'BTWENC1';
+async function deriveKey(pw, salt) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+async function encryptBlob(blob, pw) {
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pw, salt);
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, await blob.arrayBuffer());
+  return new Blob([new TextEncoder().encode(ENC_MAGIC), salt, iv, ct], { type: 'application/octet-stream' });
+}
+async function isEncryptedFile(file) {
+  return new TextDecoder().decode(await file.slice(0, ENC_MAGIC.length).arrayBuffer()) === ENC_MAGIC;
+}
+/* liefert den entschlüsselten Text oder null (falsches Passwort / beschädigt) */
+async function decryptFile(file, pw) {
+  const buf = new Uint8Array(await file.arrayBuffer()), m = ENC_MAGIC.length;
+  try {
+    const key = await deriveKey(pw, buf.slice(m, m + 16));
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(m + 16, m + 28) }, key, buf.slice(m + 28));
+    return new TextDecoder().decode(plain);
+  } catch (e) { return null; }
+}
 
 /* ------------------------------------------------------------------ Schwierigkeitsskalen */
 const Grades = {
