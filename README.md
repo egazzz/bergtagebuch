@@ -25,7 +25,7 @@ Available in German, Italian and English. All data stays on your device: no acco
   </tr>
   <tr>
     <td align="center"><img src="screenshots/badges.png" width="220" alt="Badges"><br><sub>Badges</sub></td>
-    <td></td>
+    <td align="center"><img src="screenshots/settings.png" width="220" alt="Settings"><br><sub>Settings</sub></td>
     <td></td>
   </tr>
 </table>
@@ -93,6 +93,13 @@ All tours on one map with pins in the activity colour, built with Leaflet and Ma
   - most frequent companions and regions
 - **Summit ranking:** all summits reached, sorted by elevation; several summits of one tour are listed together
 - **Badges:** 24 achievements, e.g. first tour, 100 summits, a 3,000 m peak, 2,000 m in one day, one Everest in total, 1,000 km
+
+### Settings and accessibility
+
+- **Fonts:** default, Atkinson Hyperlegible (designed for people with low vision), Nunito, Lato or serif
+- **Text and app size:** 100 %, 115 %, 125 % or 150 %; text, buttons and spacing grow throughout the app
+- **Tour form:** optional sections (rating and weather, difficulty, companions, starting point and position, description and conditions) can always be expanded, always collapsed to show only the essentials, or kept as they were last time. A collapsed section shows how many fields are filled in.
+- Language, update check at start (Android) and backup reminder
 
 ### App
 
@@ -177,6 +184,7 @@ The web app in [`docs/`](docs) is plain HTML, CSS and JavaScript with no build s
 | `Updater` | Update check and install via GitHub Releases |
 | `Diag`, `Starter` | Diagnostic log, report and crash log |
 | `DatePicker` | Custom calendar |
+| `PageSettings` | Settings: font, size, form sections, language, update check, backup reminder |
 | `Lang`, `UI`, `FileProvider` | Translations, UI helpers, file sharing |
 | `Files/` | `map.html` with Leaflet, help pages, language files |
 | `res_icon/` | Adaptive app icon |
@@ -191,6 +199,7 @@ The web app in [`docs/`](docs) is plain HTML, CSS and JavaScript with no build s
 | `js/pages.js` | Tour form, statistics, More, management, bulk GPX import, backup |
 | `sw.js` | Service worker: offline use, map tile cache, updates |
 | `lang/`, `help_*.html` | Language files and help pages |
+| `fonts/` | Self-hosted fonts (WOFF2) |
 
 ## Releasing a new version
 
@@ -224,6 +233,7 @@ Bergtagebuch is free, without ads and without an account. If you like it, you ca
 ## Credits
 
 - [Leaflet](https://leafletjs.com) and [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster)
+- Fonts [Atkinson Hyperlegible](https://www.brailleinstitute.org/freefont/), [Nunito](https://fonts.google.com/specimen/Nunito) and [Lato](https://fonts.google.com/specimen/Lato), SIL Open Font License
 - Map tiles:
   - [OpenTopoMap](https://opentopomap.org) and [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
   - [CyclOSM](https://www.cyclosm.org)

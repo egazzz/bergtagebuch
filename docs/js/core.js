@@ -1,7 +1,7 @@
 /* Bergtagebuch Web – Kern: Daten (IndexedDB), Sprachen, Skalen, GPX, Gipfelsuche, Statistik, Erfolge */
 'use strict';
 
-const APP_VERSION = '1.7.1';
+const APP_VERSION = '1.8.0';
 const KOFI_URL = 'https://ko-fi.com/egazzz';
 const OVERPASS = 'https://overpass-api.de/api/interpreter';
 

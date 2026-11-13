@@ -15,6 +15,20 @@ async function loadAll() {
   if (!S.regions) { S.regions = DEFAULT_REGIONS.map(r => ({ ...r })); await DB.kvSet('regions', S.regions); }
   S.mapStyle = await DB.kvGet('mapStyle', 'topo');
   S.mapFilter = await DB.kvGet('mapFilter', 'none');
+  S.font = await DB.kvGet('font', 'system');
+  S.uiScale = await DB.kvGet('uiScale', 100);
+  S.formMode = await DB.kvGet('formMode', 'open');
+  S.backupReminder = await DB.kvGet('backupReminder', true);
+  applyAppearance();
+}
+/* Schriftart und Größe (100–150 %) sofort anwenden: alle Maße der App sind in rem */
+const SYS_FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+const FONTS = { system: SYS_FONT, atkinson: '"Atkinson Hyperlegible", ' + SYS_FONT, nunito: '"Nunito", ' + SYS_FONT, lato: '"Lato", ' + SYS_FONT, serif: 'Georgia, "Times New Roman", "Noto Serif", serif' };
+function applyAppearance() {
+  const root = document.documentElement;
+  root.style.fontSize = (16 * (S.uiScale || 100) / 100) + 'px';
+  root.style.setProperty('--font', FONTS[S.font] || SYS_FONT);
+  root.classList.toggle('big', (S.uiScale || 100) >= 125);
 }
 const actById = id => S.activities.find(a => a.id === id) || { id: 0, name_de: '?', icon: '❔', color: '#546E7A', scales: 'FREE' };
 const regById = id => S.regions.find(r => r.id === id);
@@ -65,7 +79,7 @@ function dialog({ title = '', text = '', html = '', buttons = [{ label: 'OK', va
 const alertBox = (text, title = '') => dialog({ title, text, buttons: [{ label: 'OK', value: true }] });
 const confirmBox = (text, yes, title = '', danger = false) => dialog({ title, text, buttons: [{ label: T('cancel'), value: false }, { label: yes || 'OK', value: true, cls: danger ? 'danger' : '' }] });
 function choose(title, options) {
-  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span style="font-size:22px">${o.icon}</span>` : ''}<span>${esc(o.label)}</span></button>`).join('');
+  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span style="font-size:1.375rem">${o.icon}</span>` : ''}<span>${esc(o.label)}</span></button>`).join('');
   return dialog({ title, html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => {
     $$('.opt', ovl).forEach(b => b.onclick = () => close(options[+b.dataset.i].value));
   } });
@@ -92,7 +106,7 @@ const Stack = [];
 function makePage({ title, back = false, actions = '', nopad = false }) {
   const el = h(`<section class="page"><header class="bar">${back ? '<button class="ib back" aria-label="back">‹</button>' : ''}<h1>${esc(title)}</h1>${actions}</header>
     <div class="content ${nopad ? 'nopad' : ''}"></div></section>`);
-  if (back) { const b = $('.back', el); b.style.fontSize = '34px'; b.onclick = () => history.back(); }
+  if (back) { const b = $('.back', el); b.style.fontSize = '2.125rem'; b.onclick = () => history.back(); }
   return { el, content: $('.content', el), bar: $('.bar', el) };
 }
 /* Seite über die Tabs legen; beforeClose kann das Schließen verhindern (z. B. ungespeicherte Änderungen) */
@@ -280,7 +294,7 @@ function createMap(el, { center = [46.65, 11.35], zoom = 9, styleButton = true, 
 async function chooseMapStyle(map) {
   const styles = ['topo', 'osm', 'cycle', 'sat', 'hybrid', 'bz_ortho', 'bz_base', 'light', 'dark'];
   const html = `<div class="lbl">${esc(T('map_type'))}</div><div>${styles.map(s => `<button class="chip ${s === S.mapStyle ? 'sel' : ''}" data-s="${s}">${esc(T('map_' + s))}</button>`).join('')}</div>
-    <div class="lbl" style="margin-top:14px">${esc(T('map_color'))}</div><div>${Object.keys(FILTERS).map(f => `<button class="chip ${f === S.mapFilter ? 'sel' : ''}" data-f="${f}">${esc(T('filter_' + f))}</button>`).join('')}</div>`;
+    <div class="lbl" style="margin-top:0.875rem">${esc(T('map_color'))}</div><div>${Object.keys(FILTERS).map(f => `<button class="chip ${f === S.mapFilter ? 'sel' : ''}" data-f="${f}">${esc(T('filter_' + f))}</button>`).join('')}</div>`;
   await dialog({ title: T('map_type'), html, buttons: [{ label: 'OK', value: true }], onOpen: ovl => {
     $$('[data-s]', ovl).forEach(b => b.onclick = () => { S.mapStyle = b.dataset.s; DB.kvSet('mapStyle', S.mapStyle); $$('[data-s]', ovl).forEach(x => x.classList.toggle('sel', x === b)); map.applyStyle(); });
     $$('[data-f]', ovl).forEach(b => b.onclick = () => { S.mapFilter = b.dataset.f; DB.kvSet('mapFilter', S.mapFilter); $$('[data-f]', ovl).forEach(x => x.classList.toggle('sel', x === b)); map.applyStyle(); });
@@ -362,13 +376,13 @@ async function openDetail(id) {
   let mini = null;
   pushPage(pg, { onClose: () => { if (mini) mini.remove(); } });
   $('#ed', pg.el).onclick = () => openEdit(id, () => { closeTop(); setTimeout(() => openDetail(id), 30); });
-  const c = pg.content; c.style.padding = '0 0 calc(var(--sb) + 40px)';
+  const c = pg.content; c.style.padding = '0 0 calc(var(--sb) + 2.5rem)';
   const photos = (await DB.byIndex('photos', 'tourId', id)).sort((x, y) => (x.order || 0) - (y.order || 0));
   const coverId = t.coverId || (photos[0] && photos[0].id);
   const cover = h(`<div class="cover ${coverId ? '' : 'noimg'}">${coverId ? '' : a.icon}</div>`);
   if (coverId) { thumbUrl(coverId, true).then(u => cover.style.backgroundImage = `url("${u}")`); cover.onclick = () => openViewer(photos, Math.max(0, photos.findIndex(p => p.id === coverId))); }
   c.appendChild(cover);
-  const w = h('<div class="wrap" style="padding:0 12px"></div>'); c.appendChild(w);
+  const w = h('<div class="wrap" style="padding:0 0.75rem"></div>'); c.appendChild(w);
   const top = (t.summits && t.summits.length) ? Math.max(...t.summits.map(s => s.alt || 0)) : (t.summitAlt || 0);
   const st = [];
   if (t.ascent) st.push([fmtInt(t.ascent) + ' m', T('f_ascent')]);
@@ -376,9 +390,9 @@ async function openDetail(id) {
   if (t.distance) st.push([fmtKm(t.distance) + ' km', T('f_distance')]);
   if (t.duration) st.push([fmtDuration(t.duration), T('f_duration').split('(')[0].trim()]);
   if (top) st.push([fmtInt(top) + ' m', T('f_summit_alt')]);
-  let html = `<div class="dhead" style="padding:14px 4px 0"><h2>${esc(t.title)}</h2>
+  let html = `<div class="dhead" style="padding:0.875rem 0.25rem 0"><h2>${esc(t.title)}</h2>
     <div class="muted">${a.icon} ${esc(pickName(a))} · ${fmtDate(t.date)}${reg ? ' · ' + esc(pickName(reg)) : ''}</div>
-    ${t.rating ? `<div style="color:#F4A261;font-size:18px">${stars(t.rating)}</div>` : ''}
+    ${t.rating ? `<div style="color:#F4A261;font-size:1.125rem">${stars(t.rating)}</div>` : ''}
     ${t.summitReached === false ? `<div class="back" style="color:var(--danger)">↩ ${esc(T('turned_back'))}</div>` : ''}</div>`;
   if (st.length) html += `<div class="stats4">${st.map(s => `<div class="stat"><b>${s[0]}</b><small>${esc(s[1])}</small></div>`).join('')}</div>`;
   if (t.summits && t.summits.length) html += `<div class="sec">⛰️ ${esc(T('summits'))}</div><div class="card">${[...t.summits].sort((x, y) => (y.alt || 0) - (x.alt || 0)).map(s => `<div class="sum-row"><span class="grow">${esc(s.name)}</span><b>${s.alt ? fmtInt(s.alt) + ' m' : ''}</b></div>`).join('')}</div>`;
@@ -388,7 +402,7 @@ async function openDetail(id) {
   if (t.weather) rows.push([T('f_weather'), WEATHER[t.weather] + ' ' + T('w_' + t.weather)]);
   if (t.start) rows.push([T('f_start'), t.start]);
   if (t.persons && t.persons.length) rows.push([T('f_persons'), t.persons.join(', ')]);
-  if (rows.length) html += `<div class="card" style="margin-top:10px">${rows.map(r => `<div class="kv"><div class="k">${esc(r[0])}</div><div class="v">${esc(r[1])}</div></div>`).join('')}</div>`;
+  if (rows.length) html += `<div class="card" style="margin-top:0.625rem">${rows.map(r => `<div class="kv"><div class="k">${esc(r[0])}</div><div class="v">${esc(r[1])}</div></div>`).join('')}</div>`;
   [['f_description', t.description], ['f_conditions', t.conditions], ['f_features', t.features]].forEach(([k, val]) => {
     if (val) html += `<div class="sec">${esc(T(k))}</div><div class="card text">${esc(val)}</div>`;
   });
@@ -416,7 +430,7 @@ async function openDetail(id) {
     }, 250);
     if (track && track.pts && track.pts.length > 2 && track.pts[0].length > 2 && track.pts.some(p => p[2] != null)) w.appendChild(profileSvg(track.pts));
   }
-  w.insertAdjacentHTML('beforeend', `<div style="margin-top:22px" class="row"><button class="btn sec2 grow" id="ed2">✏️ ${esc(T('edit'))}</button><button class="btn danger grow" id="del">🗑️ ${esc(T('delete'))}</button></div>`);
+  w.insertAdjacentHTML('beforeend', `<div style="margin-top:1.375rem" class="row"><button class="btn sec2 grow" id="ed2">✏️ ${esc(T('edit'))}</button><button class="btn danger grow" id="del">🗑️ ${esc(T('delete'))}</button></div>`);
   $('#ed2', w).onclick = () => $('#ed', pg.el).click();
   $('#del', w).onclick = async () => {
     if (!await confirmBox(fill(T('delete_confirm_named'), { n: t.title }), T('delete'), '', true)) return;
@@ -441,7 +455,7 @@ function profileSvg(pts) {
   const mn = Math.min(...es), mx = Math.max(...es), W = 600, H = 120, pad = 18;
   const X = x => (x / (d || 1)) * W, Y = e => H - pad - ((e - mn) / ((mx - mn) || 1)) * (H - pad - 8);
   const path = es.map((e, i) => (i ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(e).toFixed(1)).join(' ');
-  const el = h(`<div class="card" style="padding:8px 8px 4px;margin-top:8px"><svg class="profile" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+  const el = h(`<div class="card" style="padding:0.5rem 0.5rem 0.25rem;margin-top:0.5rem"><svg class="profile" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
     <path d="${path} L ${W} ${H} L 0 ${H} Z" fill="#2A9D8F" fill-opacity=".22"/><path d="${path}" fill="none" stroke="#1D3D47" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
     <div class="row small muted" style="justify-content:space-between"><span>▼ ${fmtInt(mn)} m</span><span>${fmtKm(d)} km</span><span>▲ ${fmtInt(mx)} m</span></div></div>`);
   return el;
@@ -568,7 +582,7 @@ async function boot() {
   try {
     await DB.open();
   } catch (e) {
-    document.body.innerHTML = '<p style="padding:30px">Speicher nicht verfügbar / storage not available (private browsing?).</p>';
+    document.body.innerHTML = '<p style="padding:1.875rem">Speicher nicht verfügbar / storage not available (private browsing?).</p>';
     return;
   }
   await loadLang(await DB.kvGet('lang', systemLang()));
@@ -590,7 +604,7 @@ async function startupHints() {
     return;
   }
   const last = await DB.kvGet('lastBackup', 0);
-  if (S.tours.length >= 3 && Date.now() - last > 30 * 86400000 && Date.now() - await DB.kvGet('backupNag', 0) > 14 * 86400000) {
+  if (S.backupReminder && S.tours.length >= 3 && Date.now() - last > 30 * 86400000 && Date.now() - await DB.kvGet('backupNag', 0) > 14 * 86400000) {
     await DB.kvSet('backupNag', Date.now());
     const r = await dialog({ title: '💾 ' + T('backup'), text: T('backup_reminder') + '\n\n' + T('web_storage_note'), buttons: [{ label: T('later'), value: false }, { label: T('backup_now'), value: true }] });
     if (r) exportBackup();

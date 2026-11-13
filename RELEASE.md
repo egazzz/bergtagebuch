@@ -34,7 +34,7 @@ Der Beschreibungstext der Release erscheint in der App im Update-Hinweis.
 Die Web-App liegt im Ordner `docs/` und wird über GitHub Pages ausgeliefert (*Settings → Pages → Deploy from a branch → `main` / `/docs`*).
 
 1. Geänderte Dateien in `docs/` hochladen.
-2. In `docs/sw.js` die Zeile `const VERSION = 'bt-1.7.1';` hochzählen (z. B. `bt-1.7.2`). Ohne neue Nummer laden installierte iPhones die neuen Dateien nicht.
+2. In `docs/sw.js` die Zeile `const VERSION = 'bt-1.8.0';` hochzählen (z. B. `bt-1.8.1`). Ohne neue Nummer laden installierte iPhones die neuen Dateien nicht.
 3. Optional `APP_VERSION` in `docs/js/core.js` anpassen (wird unter *Mehr → Über die App* angezeigt).
 
 Beim nächsten Start fragt die Web-App „Neu laden?“ und übernimmt die neue Version. Die Daten bleiben erhalten.

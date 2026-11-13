@@ -1,11 +1,12 @@
 /* Bergtagebuch Web – Service Worker: App offline verfügbar, Kartenkacheln zwischenspeichern */
-const VERSION = 'bt-1.7.1';
+const VERSION = 'bt-1.8.0';
 const APP_CACHE = 'app-' + VERSION;
 const TILE_CACHE = 'tiles-v1';
 const TILE_MAX = 3000;
 const APP_FILES = ['./', 'index.html', 'manifest.webmanifest', 'js/core.js', 'js/ui.js', 'js/pages.js',
   'lib/leaflet.js', 'lib/leaflet.css', 'lib/markercluster.js', 'lib/markercluster.css',
   'lang/lang_de.txt', 'lang/lang_it.txt', 'lang/lang_en.txt', 'help_de.html', 'help_it.html', 'help_en.html',
+  'fonts/atkinson-r.woff2', 'fonts/atkinson-b.woff2', 'fonts/nunito-r.woff2', 'fonts/nunito-b.woff2', 'fonts/lato-r.woff2', 'fonts/lato-b.woff2',
   'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/favicon-32.png'];
 
 self.addEventListener('install', e => {

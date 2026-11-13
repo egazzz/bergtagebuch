@@ -35,17 +35,19 @@ async function openEdit(id, onSaved) {
   const actOpts = () => S.activities.map(a => `<option value="${a.id}" ${a.id === t.activityId ? 'selected' : ''}>${a.icon} ${esc(pickName(a))}</option>`).join('')
     + `<option value="new">➕ ${esc(T('activity_add_own'))}</option><option value="manage">⚙️ ${esc(T('activity_manage'))}</option>`;
   const v = x => x == null ? '' : x;
+  /* optionale Bereiche: je nach Einstellung auf- oder zugeklappt */
+  const grpOpen = {};
+  for (const k of ['rating', 'grade', 'persons', 'place', 'texts'])
+    grpOpen[k] = S.formMode === 'closed' ? false : S.formMode === 'remember' ? await DB.kvGet('grp_' + k, true) : true;
+  const grp = (k, icon, body) => `<div class="grp ${grpOpen[k] ? '' : 'closed'}" data-g="${k}"><button class="grp-h" type="button"><span>${icon}</span><span class="t">${esc(T('grp_' + k))}</span><span class="cnt"></span><span class="arr">▾</span></button><div class="grp-b">${body}</div></div>`;
   w.innerHTML = `
     <div class="card">
-      <div class="grid2">
+      <div class="grid2 stack">
         <div class="field"><label>${esc(T('f_date'))}</label><input class="inp" type="date" id="e_date" value="${esc(t.date)}"></div>
         <div class="field"><label>${esc(T('f_activity'))}</label><select class="inp" id="e_act">${actOpts()}</select></div>
       </div>
       <div class="field"><label>${esc(T('f_title'))}</label><input class="inp" id="e_title" value="${esc(t.title)}" placeholder="${esc(T('f_title_hint'))}"></div>
-      <div class="grid2">
-        <div class="field"><label>${esc(T('f_region'))}</label><select class="inp" id="e_reg"><option value="">–</option>${S.regions.map(r => `<option value="${r.id}" ${r.id === t.regionId ? 'selected' : ''}>${esc(pickName(r))}</option>`).join('')}</select></div>
-        <div class="field"><label>${esc(T('f_start'))}</label><input class="inp" id="e_start" value="${esc(t.start)}" placeholder="${esc(T('f_start_hint'))}"></div>
-      </div>
+      <div class="field"><label>${esc(T('f_region'))}</label><select class="inp" id="e_reg"><option value="">–</option>${S.regions.map(r => `<option value="${r.id}" ${r.id === t.regionId ? 'selected' : ''}>${esc(pickName(r))}</option>`).join('')}</select></div>
     </div>
     <div class="card"><div class="lbl">🧭 ${esc(T('f_gpx'))}</div><div class="row"><div class="grow small" id="e_gpxst"></div><button class="btn sec2" id="e_gpx">${esc(T('gpx_import'))}</button></div></div>
     <div class="card">
@@ -63,23 +65,39 @@ async function openEdit(id, onSaved) {
       <button class="chip" id="s_add">＋ ${esc(T('summit_add'))}</button><button class="chip" id="s_det">🔎 ${esc(T('summit_detect'))}</button><button class="chip" id="s_near">📍 ${esc(T('summit_near'))}</button></div>
       <div id="e_sums"></div>
       <label class="check"><input type="checkbox" id="e_reached" ${t.summitReached !== false ? 'checked' : ''}>${esc(T('f_summit_reached'))}</label></div>
-    <div class="card"><div id="e_grade"></div><div id="e_aval"></div>
-      <div class="lbl">${esc(T('f_weather'))}</div><div id="e_wx">${Object.keys(WEATHER).map(k => `<button class="chip ${t.weather === k ? 'sel' : ''}" data-w="${k}">${WEATHER[k]} ${esc(T('w_' + k))}</button>`).join('')}</div>
-      <div class="lbl" style="margin-top:10px">${esc(T('f_rating'))}</div><div class="starsel" id="e_rate"></div></div>
-    <div class="card"><div class="lbl">👥 ${esc(T('f_persons'))}</div><div id="e_pers"></div>
-      <div class="row" style="margin-top:6px"><input class="inp grow" id="e_pin" list="e_plist" placeholder="${esc(T('f_persons_hint'))}" autocomplete="off"><button class="btn sec2" id="e_padd">＋</button></div>
-      <datalist id="e_plist">${allPersons().map(p => `<option value="${esc(p.name)}">`).join('')}</datalist></div>
     <div class="card"><div class="lbl">📷 ${esc(T('photos'))}</div><div class="gallery" id="e_ph"></div></div>
-    <div class="card"><div class="lbl">📍 ${esc(T('f_position'))}</div><div class="small" id="e_pos"></div>
-      <div class="row" style="margin-top:8px"><button class="btn sec2 grow" id="e_pmap">🗺️ ${esc(T('pos_map'))}</button><button class="btn sec2 grow" id="e_pgps">📍 ${esc(T('pos_gps'))}</button></div></div>
-    <div class="card">
-      <div class="field"><label>${esc(T('f_description'))}</label><textarea class="inp" id="e_descr" placeholder="${esc(T('f_description_hint'))}">${esc(t.description)}</textarea></div>
+    ${grp('rating', '⭐', `<div class="lbl">${esc(T('f_rating'))}</div><div class="starsel" id="e_rate"></div>
+      <div class="lbl" style="margin-top:0.625rem">${esc(T('f_weather'))}</div><div id="e_wx">${Object.keys(WEATHER).map(k => `<button class="chip ${t.weather === k ? 'sel' : ''}" data-w="${k}">${WEATHER[k]} ${esc(T('w_' + k))}</button>`).join('')}</div>`)}
+    ${grp('grade', '🧗', `<div id="e_grade"></div><div id="e_aval"></div>`)}
+    ${grp('persons', '👥', `<div id="e_pers"></div>
+      <div class="row" style="margin-top:0.375rem"><input class="inp grow" id="e_pin" list="e_plist" placeholder="${esc(T('f_persons_hint'))}" autocomplete="off"><button class="btn sec2" id="e_padd">＋</button></div>
+      <datalist id="e_plist">${allPersons().map(p => `<option value="${esc(p.name)}">`).join('')}</datalist>`)}
+    ${grp('place', '📍', `<div class="field"><label>${esc(T('f_start'))}</label><input class="inp" id="e_start" value="${esc(t.start)}" placeholder="${esc(T('f_start_hint'))}"></div>
+      <div class="lbl">${esc(T('f_position'))}</div><div class="small" id="e_pos"></div>
+      <div class="row" style="margin-top:0.5rem"><button class="btn sec2 grow" id="e_pmap">🗺️ ${esc(T('pos_map'))}</button><button class="btn sec2 grow" id="e_pgps">📍 ${esc(T('pos_gps'))}</button></div>`)}
+    ${grp('texts', '📝', `<div class="field"><label>${esc(T('f_description'))}</label><textarea class="inp" id="e_descr" placeholder="${esc(T('f_description_hint'))}">${esc(t.description)}</textarea></div>
       <div class="field"><label>${esc(T('f_conditions'))}</label><textarea class="inp" id="e_cond" placeholder="${esc(T('f_conditions_hint'))}">${esc(t.conditions)}</textarea></div>
-      <div class="field"><label>${esc(T('f_features'))}</label><textarea class="inp" id="e_feat" placeholder="${esc(T('f_features_hint'))}">${esc(t.features)}</textarea></div>
-    </div>
-    <button class="btn block" id="sv2" style="margin-top:6px">${esc(T('save'))}</button>`;
+      <div class="field"><label>${esc(T('f_features'))}</label><textarea class="inp" id="e_feat" placeholder="${esc(T('f_features_hint'))}">${esc(t.features)}</textarea></div>`)}
+    <button class="btn block" id="sv2" style="margin-top:0.375rem">${esc(T('save'))}</button>`;
   w.addEventListener('input', touch);
   const E = id2 => $('#' + id2, w);
+  const filled = k => {
+    const nz = id2 => E(id2) && E(id2).value.trim() ? 1 : 0;
+    switch (k) {
+      case 'rating': return (t.rating ? 1 : 0) + (t.weather ? 1 : 0);
+      case 'grade': return (t.grade ? 1 : 0) + (t.avalanche ? 1 : 0);
+      case 'persons': return t.persons.length;
+      case 'place': return nz('e_start') + (t.lat != null ? 1 : 0);
+      case 'texts': return nz('e_descr') + nz('e_cond') + nz('e_feat');
+    }
+    return 0;
+  };
+  const drawCounts = () => $$('.grp', w).forEach(g => { const n = filled(g.dataset.g); $('.cnt', g).textContent = n && g.classList.contains('closed') ? '✓ ' + fill(T('grp_filled'), { n }) : ''; });
+  $$('.grp-h', w).forEach(b => b.onclick = () => {
+    const g = b.parentElement, k = g.dataset.g, open = g.classList.toggle('closed') === false;
+    if (S.formMode === 'remember') DB.kvSet('grp_' + k, open);
+    drawCounts();
+  });
 
   /* --- Aktivität, Schwierigkeit, Lawinenstufe */
   const drawGrade = () => {
@@ -146,7 +164,7 @@ async function openEdit(id, onSaved) {
 
   /* --- Position */
   const drawPos = () => {
-    E('e_pos').innerHTML = t.lat != null ? `${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} <button class="chip" id="p_clr" style="margin-left:6px">✕</button>` : `<span class="muted">${esc(T('pos_none'))}</span>`;
+    E('e_pos').innerHTML = t.lat != null ? `${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} <button class="chip" id="p_clr" style="margin-left:0.375rem">✕</button>` : `<span class="muted">${esc(T('pos_none'))}</span>`;
     const c = E('p_clr'); if (c) c.onclick = () => { t.lat = t.lon = null; touch(); drawPos(); };
   };
   drawPos();
@@ -276,6 +294,7 @@ async function openEdit(id, onSaved) {
     if (msgs.length) toast(msgs.join('\n'), 3500);
   };
   drawPhotos();
+  drawCounts();
 
   /* --- Speichern */
   const save = async () => {
@@ -366,7 +385,7 @@ function renderStats(v) {
     <div class="tile"><b>${fmtInt(tot.minutes / 60)}</b><small>${esc(T('st_hours'))}</small></div>
     <div class="tile"><b>${fmtInt(tot.days)}</b><small>${esc(T('st_days'))}</small></div>
     <div class="tile"><b>${fmtInt(tot.summits)}</b><small>${esc(T('st_summits'))}</small></div></div>`;
-  if (tot.ascent >= 885) html += `<div class="hint-box" style="margin-top:10px">🏔️ ${esc(fill(T('st_everest'), { x: (tot.ascent / 8849).toLocaleString(locale(), { maximumFractionDigits: 1 }) }))}</div>`;
+  if (tot.ascent >= 885) html += `<div class="hint-box" style="margin-top:0.625rem">🏔️ ${esc(fill(T('st_everest'), { x: (tot.ascent / 8849).toLocaleString(locale(), { maximumFractionDigits: 1 }) }))}</div>`;
   /* nach Aktivität */
   const byAct = {};
   tours.forEach(t => { const o = byAct[t.activityId] || (byAct[t.activityId] = { n: 0, asc: 0 }); o.n++; o.asc += t.ascent || 0; });
@@ -386,7 +405,7 @@ function renderStats(v) {
     html += `<div class="sec">${esc(T('st_by_year'))}</div>`;
   }
   const mx = Math.max(1, ...bars.map(b => b[1])), mi = bars.findIndex(b => b[1] === mx);
-  html += `<div class="card"><div class="months">${bars.map((b, i) => `<div>${i === mi && b[1] ? `<em>${fmtInt(b[1])}</em>` : ''}<span class="b"><i style="height:${b[1] / mx * 100}%"></i></span>${esc(b[0])}</div>`).join('')}</div>${S.statYear ? `<div class="small muted" style="margin-top:6px">${esc(T('st_month_hint'))}</div>` : ''}</div>`;
+  html += `<div class="card"><div class="months">${bars.map((b, i) => `<div>${i === mi && b[1] ? `<em>${fmtInt(b[1])}</em>` : ''}<span class="b"><i style="height:${b[1] / mx * 100}%"></i></span>${esc(b[0])}</div>`).join('')}</div>${S.statYear ? `<div class="small muted" style="margin-top:0.375rem">${esc(T('st_month_hint'))}</div>` : ''}</div>`;
   /* Rekorde */
   const recs = [];
   const ranking = summitRanking(tours);
@@ -418,7 +437,7 @@ function renderStats(v) {
         <div class="row"><b class="grow">${esc(r.summits[0].name)}</b><span class="alt">${fmtInt(r.summits[0].alt)} m</span></div>
         ${r.summits.slice(1).map(s => `<div class="row sub2"><span class="grow">+ ${esc(s.name)}</span><span>${fmtInt(s.alt)} m</span></div>`).join('')}
         <div class="small muted">${actById(r.tour.activityId).icon} ${fmtDate(r.tour.date)} · ${esc(r.tour.title)}</div></div></div>`).join('')
-        + (ranking.length > 10 ? `<button class="btn sec2 block" id="rkm" style="margin-top:8px">${esc(all ? T('show_less') : fill(T('show_all'), { n: ranking.length }))}</button>` : '');
+        + (ranking.length > 10 ? `<button class="btn sec2 block" id="rkm" style="margin-top:0.5rem">${esc(all ? T('show_less') : fill(T('show_all'), { n: ranking.length }))}</button>` : '');
       $$('#rk [data-open]', sb).forEach(el => el.onclick = () => openDetail(+el.dataset.open));
       const m = $('#rkm', sb); if (m) m.onclick = () => { all = !all; drawRank(); };
     };
@@ -428,7 +447,7 @@ function renderStats(v) {
 }
 function drawBadges(root) {
   const bs = evaluateBadges(S.tours, S.activities), n = bs.filter(b => b.earned).length;
-  const el = h(`<div><div class="sec">🎖️ ${esc(T('badges'))}</div><div class="small muted" style="margin:-4px 4px 8px">${esc(fill(T('badges_count'), { n, t: bs.length }))}</div>
+  const el = h(`<div><div class="sec">🎖️ ${esc(T('badges'))}</div><div class="small muted" style="margin:-0.25rem 0.25rem 0.5rem">${esc(fill(T('badges_count'), { n, t: bs.length }))}</div>
     <div class="badges">${bs.map((b, i) => `<button class="bdg ${b.earned ? '' : 'off'}" data-i="${i}"><span>${b.icon}</span>${esc(T('badge_' + b.key))}</button>`).join('')}</div></div>`);
   $$('.bdg', el).forEach(btn => btn.onclick = () => {
     const b = bs[+btn.dataset.i];
@@ -445,7 +464,6 @@ async function renderMore(v) {
   const w = h('<div class="wrap"></div>'); pg.content.appendChild(w);
   const last = await DB.kvGet('lastBackup', 0);
   const item = (id, ic, label, sub = '') => `<div class="item" id="${id}"><span class="ic">${ic}</span><div class="grow">${esc(label)}${sub ? `<div class="small muted">${esc(sub)}</div>` : ''}</div><span class="chev">›</span></div>`;
-  const langName = { de: 'Deutsch', it: 'Italiano', en: 'English' };
   w.innerHTML = `
     <div class="sec">${esc(T('more_manage'))}</div><div class="list">
       ${item('m_act', '🏷️', T('manage_activities'))}${item('m_reg', '🗺️', T('manage_regions'))}${item('m_per', '👥', T('manage_persons'))}</div>
@@ -454,12 +472,12 @@ async function renderMore(v) {
       ${item('m_bak', '💾', T('backup_create'), T('backup_last') + ': ' + (last ? fmtDate(new Date(last).toISOString().slice(0, 10)) : T('backup_never')))}
       ${item('m_res', '♻️', T('backup_restore'))}</div>
     <div class="sec">${esc(T('more_app'))}</div><div class="list">
-      ${item('m_lang', '🌐', T('language'), langName[I18N.code])}
+      ${item('m_set', '⚙️', T('settings'))}
       ${item('m_help', '❓', T('help'))}
       ${isStandalone() ? '' : item('m_inst', '📲', T('install_title'))}
       ${item('m_kofi', '☕', T('support_kofi'))}
       ${item('m_about', 'ℹ️', T('about'), 'Web ' + APP_VERSION)}</div>
-    <div class="small muted" style="text-align:center;margin-top:14px" id="m_store"></div>`;
+    <div class="small muted" style="text-align:center;margin-top:0.875rem" id="m_store"></div>`;
   $('#m_act', w).onclick = () => openManageActivities();
   $('#m_reg', w).onclick = () => openManageRegions();
   $('#m_per', w).onclick = () => openManagePersons();
@@ -469,11 +487,7 @@ async function renderMore(v) {
   $('#m_help', w).onclick = () => openHelp();
   const inst = $('#m_inst', w); if (inst) inst.onclick = () => alertBox(isIOS() ? T('install_ios') : T('install_other'), '📲 ' + T('install_title'));
   $('#m_kofi', w).onclick = async () => { if (await dialog({ title: '☕ ' + T('support_kofi'), text: T('support_text'), buttons: [{ label: T('support_no'), value: false }, { label: T('support_open'), value: true }] })) window.open(KOFI_URL, '_blank'); };
-  $('#m_lang', w).onclick = async () => {
-    const c = await choose(T('language'), ['de', 'it', 'en'].map(k => ({ label: langName[k], value: k, sel: k === I18N.code, icon: { de: '🇩🇪', it: '🇮🇹', en: '🇬🇧' }[k] })));
-    if (!c || c === I18N.code) return;
-    await DB.kvSet('lang', c); await loadLang(c); document.title = T('app_name'); buildTabs(); renderTab();
-  };
+  $('#m_set', w).onclick = () => openSettings();
   $('#m_about', w).onclick = () => {
     const link = `<a href="${KOFI_URL}" target="_blank" rel="noopener">ko-fi.com/egazzz</a>`;
     const txt = esc(fill(T('about_text'), { v: 'Web ' + APP_VERSION })).replace('ko-fi.com/egazzz', link);
@@ -492,14 +506,60 @@ async function renderMore(v) {
   }
 }
 
+/* ------------------------------------------------------------------ Einstellungen */
+const LANG_NAMES = { de: 'Deutsch', it: 'Italiano', en: 'English' };
+function openSettings() {
+  const pg = makePage({ title: T('settings'), back: true });
+  pushPage(pg, { onClose: () => { buildTabs(); renderTab(); } });
+  const item = (id, ic, label, val) => `<div class="item" id="${id}"><span class="ic">${ic}</span><div class="grow">${esc(label)}<div class="val">${esc(val)}</div></div><span class="chev">›</span></div>`;
+  const toggle = (id, ic, label, on) => `<label class="item" for="${id}"><span class="ic">${ic}</span><div class="grow">${esc(label)}</div><span class="sw"><input type="checkbox" id="${id}" ${on ? 'checked' : ''}><span></span></span></label>`;
+  const draw = () => {
+    pg.el.querySelector('h1').textContent = T('settings');
+    pg.content.innerHTML = `<div class="wrap">
+      <div class="sec">${esc(T('settings_display'))}</div><div class="list">
+        ${item('s_font', '🔤', T('settings_font'), T('font_' + S.font))}
+        ${item('s_size', '🔍', T('settings_size'), S.uiScale + ' %')}</div>
+      <div class="preview">${esc(T('settings_preview'))}</div>
+      <div class="small muted" style="margin:-0.25rem 0.25rem 0">${esc(T('settings_size_hint'))}</div>
+      <div class="sec">${esc(T('settings_form'))}</div><div class="list">
+        ${item('s_form', '📝', T('settings_form_mode'), T('form_' + S.formMode))}</div>
+      <div class="small muted" style="margin:-0.25rem 0.25rem 0">${esc(T('settings_form_hint'))}</div>
+      <div class="sec">${esc(T('settings_general'))}</div><div class="list">
+        ${item('s_lang', '🌐', T('language'), LANG_NAMES[I18N.code])}
+        ${toggle('s_bak', '💾', T('settings_backup_reminder'), S.backupReminder)}</div></div>`;
+    const c = pg.content;
+    $('#s_font', c).onclick = async () => {
+      const keys = ['system', 'atkinson', 'nunito', 'lato', 'serif'];
+      const html = keys.map(k => `<button class="opt ${k === S.font ? 'sel' : ''}" data-k="${k}" style="font-family:${esc(FONTS[k])}">${esc(T('font_' + k))}</button>`).join('');
+      const k = await dialog({ title: T('settings_font'), html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => $$('[data-k]', ovl).forEach(b => b.onclick = () => close(b.dataset.k)) });
+      if (k) { S.font = k; await DB.kvSet('font', k); applyAppearance(); draw(); }
+    };
+    $('#s_size', c).onclick = async () => {
+      const v = await choose(T('settings_size'), [100, 115, 125, 150].map(p => ({ label: p + ' %', value: p, sel: p === S.uiScale })));
+      if (v) { S.uiScale = v; await DB.kvSet('uiScale', v); applyAppearance(); draw(); }
+    };
+    $('#s_form', c).onclick = async () => {
+      const v = await choose(T('settings_form_mode'), ['open', 'closed', 'remember'].map(m => ({ label: T('form_' + m), value: m, sel: m === S.formMode })));
+      if (v) { S.formMode = v; await DB.kvSet('formMode', v); draw(); }
+    };
+    $('#s_lang', c).onclick = async () => {
+      const v = await choose(T('language'), ['de', 'it', 'en'].map(k => ({ label: LANG_NAMES[k], value: k, sel: k === I18N.code, icon: { de: '🇩🇪', it: '🇮🇹', en: '🇬🇧' }[k] })));
+      if (!v || v === I18N.code) return;
+      await DB.kvSet('lang', v); await loadLang(v); document.title = T('app_name'); buildTabs(); draw();
+    };
+    $('#s_bak', c).onchange = async e => { S.backupReminder = e.target.checked; await DB.kvSet('backupReminder', S.backupReminder); };
+  };
+  draw();
+}
+
 /* ------------------------------------------------------------------ Verwaltung: Aktivitäten */
 function openManageActivities(onClose) {
   const pg = makePage({ title: T('manage_activities'), back: true });
   pushPage(pg, { onClose: () => { if (onClose) onClose(); renderTab(); } });
   const draw = () => {
     const used = id => S.tours.filter(t => t.activityId === id).length;
-    pg.content.innerHTML = `<div class="wrap"><button class="btn block" id="a_new" style="margin-bottom:12px">＋ ${esc(T('activity_new'))}</button><div class="list">${S.activities.map(a => `<div class="item" data-id="${a.id}">
-      <span class="ic" style="background:${a.color}22;border-radius:10px">${a.icon}</span><div class="grow">${esc(pickName(a))}<div class="small muted">${esc(Grades.groupLabel(a.scales))} · ${used(a.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
+    pg.content.innerHTML = `<div class="wrap"><button class="btn block" id="a_new" style="margin-bottom:0.75rem">＋ ${esc(T('activity_new'))}</button><div class="list">${S.activities.map(a => `<div class="item" data-id="${a.id}">
+      <span class="ic" style="background:${a.color}22;border-radius:0.625rem">${a.icon}</span><div class="grow">${esc(pickName(a))}<div class="small muted">${esc(Grades.groupLabel(a.scales))} · ${used(a.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
     $('#a_new', pg.content).onclick = async () => { if (await editActivity(null)) draw(); };
     $$('[data-id]', pg.content).forEach(el => el.onclick = async () => { await editActivity(S.activities.find(a => a.id === +el.dataset.id)); draw(); });
   };
@@ -513,8 +573,8 @@ async function editActivity(a) {
     <div class="field"><label>${esc(T('name_it'))}</label><input class="inp" id="a_it" value="${esc(cur.name_it)}"></div>
     <div class="field"><label>${esc(T('name_en'))}</label><input class="inp" id="a_en" value="${esc(cur.name_en)}"></div>
     <div class="lbl">${esc(T('icon'))}</div><div class="icgrid">${ICONS.map(i => `<button data-ic="${i}" class="${i === cur.icon ? 'sel' : ''}">${i}</button>`).join('')}</div>
-    <div class="lbl" style="margin-top:12px">${esc(T('color'))}</div><div class="colgrid">${COLORS.map(c => `<button data-c="${c[1]}" title="${esc(T(c[0]))}" class="${c[1] === cur.color ? 'sel' : ''}" style="background:${c[1]}"></button>`).join('')}</div>
-    <div class="lbl" style="margin-top:12px">${esc(T('grade_scale'))}</div><div>${Grades.all.filter(k => k !== 'FREE').map(k => `<button class="chip ${sel.includes(k) ? 'sel' : ''}" data-k="${k}">${esc(Grades.longName(k))}</button>`).join('')}</div>`;
+    <div class="lbl" style="margin-top:0.75rem">${esc(T('color'))}</div><div class="colgrid">${COLORS.map(c => `<button data-c="${c[1]}" title="${esc(T(c[0]))}" class="${c[1] === cur.color ? 'sel' : ''}" style="background:${c[1]}"></button>`).join('')}</div>
+    <div class="lbl" style="margin-top:0.75rem">${esc(T('grade_scale'))}</div><div>${Grades.all.filter(k => k !== 'FREE').map(k => `<button class="chip ${sel.includes(k) ? 'sel' : ''}" data-k="${k}">${esc(Grades.longName(k))}</button>`).join('')}</div>`;
   const used = a ? S.tours.filter(t => t.activityId === a.id).length : 0;
   const btns = [{ label: T('cancel'), value: null }];
   if (!isNew) btns.push({ label: T('delete'), value: 'delete', cls: 'danger' });
@@ -556,7 +616,7 @@ function openManageRegions() {
   pushPage(pg, { onClose: renderTab });
   const draw = () => {
     const used = id => S.tours.filter(t => t.regionId === id).length;
-    pg.content.innerHTML = `<div class="wrap"><button class="btn block" id="r_new" style="margin-bottom:12px">＋ ${esc(T('add_new'))}</button><div class="list">${S.regions.map(r => `<div class="item" data-id="${r.id}"><span class="ic">🗺️</span><div class="grow">${esc(pickName(r))}<div class="small muted">${used(r.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
+    pg.content.innerHTML = `<div class="wrap"><button class="btn block" id="r_new" style="margin-bottom:0.75rem">＋ ${esc(T('add_new'))}</button><div class="list">${S.regions.map(r => `<div class="item" data-id="${r.id}"><span class="ic">🗺️</span><div class="grow">${esc(pickName(r))}<div class="small muted">${used(r.id)} ${esc(T('tours_unit'))}</div></div><span class="chev">›</span></div>`).join('')}</div></div>`;
     $('#r_new', pg.content).onclick = async () => { await editRegion(null); draw(); };
     $$('[data-id]', pg.content).forEach(el => el.onclick = async () => { await editRegion(S.regions.find(r => r.id === +el.dataset.id)); draw(); });
   };
