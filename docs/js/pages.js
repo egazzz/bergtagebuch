@@ -517,6 +517,7 @@ function openSettings() {
     pg.el.querySelector('h1').textContent = T('settings');
     pg.content.innerHTML = `<div class="wrap">
       <div class="sec">${esc(T('settings_display'))}</div><div class="list">
+        ${item('s_theme', '🌓', T('settings_theme'), T('theme_' + S.theme))}
         ${item('s_font', '🔤', T('settings_font'), T('font_' + S.font))}
         ${item('s_size', '🔍', T('settings_size'), S.uiScale + ' %')}</div>
       <div class="preview">${esc(T('settings_preview'))}</div>
@@ -537,6 +538,10 @@ function openSettings() {
       const html = keys.map(k => `<button class="opt ${k === S.font ? 'sel' : ''}" data-k="${k}" style="font-family:${esc(FONTS[k])}">${esc(T('font_' + k))}</button>`).join('');
       const k = await dialog({ title: T('settings_font'), html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => $$('[data-k]', ovl).forEach(b => b.onclick = () => close(b.dataset.k)) });
       if (k) { S.font = k; await DB.kvSet('font', k); applyAppearance(); draw(); }
+    };
+    $('#s_theme', c).onclick = async () => {
+      const v = await choose(T('settings_theme'), ['auto', 'light', 'dark'].map(m => ({ label: T('theme_' + m), value: m, sel: m === S.theme, icon: { auto: '🌓', light: '☀️', dark: '🌙' }[m] })));
+      if (v) { S.theme = v; await DB.kvSet('theme', v); applyTheme(); draw(); }
     };
     $('#s_size', c).onclick = async () => {
       const v = await choose(T('settings_size'), [100, 115, 125, 150].map(p => ({ label: p + ' %', value: p, sel: p === S.uiScale })));

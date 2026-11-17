@@ -377,7 +377,7 @@ settings_autoupdate=Beim Start nach Updates suchen
 settings_backup_reminder=An Backup erinnern
 on=Ein
 off=Aus
-settings_restart=Schrift und Größe werden beim nächsten Start übernommen. App jetzt schließen? Danach einfach wieder öffnen.
+settings_restart=Design, Schrift und Größe werden beim nächsten Start übernommen. App jetzt schließen? Danach einfach wieder öffnen.
 settings_close_now=Jetzt schließen
 grp_rating=Bewertung & Wetter
 grp_grade=Schwierigkeit
@@ -398,3 +398,8 @@ settings_privacy=Datenschutz
 settings_auto_summits=Gipfel automatisch suchen
 settings_auto_summits_hint=Beim GPX-Import werden die Koordinaten möglicher Gipfel an OpenStreetMap (Overpass) geschickt, um Namen zu finden. Ausgeschaltet passiert das nur, wenn du auf „Erkennen“ oder „Nähe“ tippst.
 privacy_info=Was die App wohin sendet
+# Einstellungen
+settings_theme=Design
+theme_auto=Automatisch (wie das System)
+theme_light=Hell
+theme_dark=Dunkel

@@ -375,7 +375,7 @@ settings_autoupdate=Cerca aggiornamenti all'avvio
 settings_backup_reminder=Promemoria backup
 on=Attivo
 off=Disattivato
-settings_restart=Carattere e dimensione verranno applicati al prossimo avvio. Chiudere ora l'app? Poi riaprila.
+settings_restart=Tema, carattere e dimensione verranno applicati al prossimo avvio. Chiudere ora l'app? Poi riaprila.
 settings_close_now=Chiudi ora
 grp_rating=Valutazione e meteo
 grp_grade=Difficoltà
@@ -396,3 +396,8 @@ settings_privacy=Privacy
 settings_auto_summits=Cerca cime automaticamente
 settings_auto_summits_hint=Durante l'importazione GPX le coordinate delle possibili cime vengono inviate a OpenStreetMap (Overpass) per trovarne i nomi. Se disattivato, succede solo quando tocchi „Riconosci“ o „Vicino“.
 privacy_info=Cosa invia l'app e a chi
+# Einstellungen
+settings_theme=Tema
+theme_auto=Automatico (come il sistema)
+theme_light=Chiaro
+theme_dark=Scuro

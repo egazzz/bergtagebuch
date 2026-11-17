@@ -361,7 +361,7 @@ settings_autoupdate=Check for updates at start
 settings_backup_reminder=Backup reminder
 on=On
 off=Off
-settings_restart=Font and size will be applied on the next start. Close the app now? Then simply open it again.
+settings_restart=Theme, font and size will be applied on the next start. Close the app now? Then simply open it again.
 settings_close_now=Close now
 grp_rating=Rating & weather
 grp_grade=Difficulty
@@ -382,3 +382,8 @@ settings_privacy=Privacy
 settings_auto_summits=Look up summits automatically
 settings_auto_summits_hint=When importing GPX, the coordinates of possible summits are sent to OpenStreetMap (Overpass) to find their names. When switched off, this only happens when you tap "Detect" or "Nearby".
 privacy_info=What the app sends where
+# Einstellungen
+settings_theme=Theme
+theme_auto=Automatic (like the system)
+theme_light=Light
+theme_dark=Dark

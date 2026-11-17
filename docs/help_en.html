@@ -17,8 +17,16 @@
   table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
   td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
   th { background: #E0EFEC; }
+  html.dark body { color: #E4ECEE; background: #11181B; }
+  html.dark h1, html.dark h2 { color: #8AD3C6; border-color: #33434A; }
+  html.dark .toc, html.dark table { background: #1C2629; }
+  html.dark .toc a, html.dark a { color: #35B3A4; }
+  html.dark .tip, html.dark th { background: #1F3B38; }
+  html.dark .warn { background: #3A2C1E; }
+  html.dark td, html.dark th { border-color: #33434A; }
   a { color: #2A9D8F; }
 </style>
+<script>if (/[?&]theme=dark/.test(location.search)) document.documentElement.className = 'dark';</script>
 </head>
 <body>
 <h1 id="start">Bergtagebuch – Help</h1>
@@ -61,7 +69,8 @@
 <p>For each year or all years: tours, elevation gain, kilometres, hours, tour days and summits, compared with the previous year. Plus activities, elevation gain per month, records, the <b>summit ranking</b> (by elevation, several summits of a tour together), most frequent companions and regions and 24 <b>badges</b>.</p>
 <h2 id="settings">Settings</h2>
 <p>Under <b>More → Settings</b> you find:</p>
-<ul><li><b>Font:</b> Default, <i>Easy to read</i> (Atkinson Hyperlegible, designed for people with low vision), <i>Rounded</i> (Nunito), <i>Classic</i> (Lato) or <i>Serif</i>.</li>
+<ul><li><b>Theme:</b> <i>Automatic</i> follows the device's light or dark appearance, or always <i>Light</i> or <i>Dark</i>.</li>
+<li><b>Font:</b> Default, <i>Easy to read</i> (Atkinson Hyperlegible, designed for people with low vision), <i>Rounded</i> (Nunito), <i>Classic</i> (Lato) or <i>Serif</i>.</li>
 <li><b>Text and app size:</b> 100 %, 115 %, 125 % or 150 %. Text, buttons and spacing grow right away throughout the app.</li>
 <li><b>Optional sections in the form:</b> <i>Always fully expanded</i>, <i>Collapsed – essentials only</i> or <i>As last time</i>. Optional are rating and weather, difficulty, companions, starting point and position, and description and conditions. A collapsed section shows how many fields are filled in and opens with a tap.</li>
 <li><b>Language</b> and <b>Backup reminder</b>.</li></ul>

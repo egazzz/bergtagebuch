@@ -26,7 +26,7 @@ Available in German, Italian and English. All data stays on your device: no acco
   <tr>
     <td align="center"><img src="screenshots/badges.png" width="220" alt="Badges"><br><sub>Badges</sub></td>
     <td align="center"><img src="screenshots/settings.png" width="220" alt="Settings"><br><sub>Settings</sub></td>
-    <td></td>
+    <td align="center"><img src="screenshots/dark-mode.png" width="220" alt="Dark mode"><br><sub>Dark mode</sub></td>
   </tr>
 </table>
 
@@ -96,6 +96,7 @@ All tours on one map with pins in the activity colour, built with Leaflet and Ma
 
 ### Settings and accessibility
 
+- **Dark mode:** automatic (follows the system setting), always light or always dark
 - **Fonts:** default, Atkinson Hyperlegible (designed for people with low vision), Nunito, Lato or serif
 - **Text and app size:** 100 %, 115 %, 125 % or 150 %; text, buttons and spacing grow throughout the app
 - **Tour form:** optional sections (rating and weather, difficulty, companions, starting point and position, description and conditions) can always be expanded, always collapsed to show only the essentials, or kept as they were last time. A collapsed section shows how many fields are filled in.

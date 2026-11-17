@@ -18,6 +18,7 @@ async function loadAll() {
   S.mapStyle = await DB.kvGet('mapStyle', 'topo');
   S.mapFilter = await DB.kvGet('mapFilter', 'none');
   S.font = await DB.kvGet('font', 'system');
+  S.theme = await DB.kvGet('theme', 'auto');
   S.uiScale = await DB.kvGet('uiScale', 100);
   S.formMode = await DB.kvGet('formMode', 'open');
   S.backupReminder = await DB.kvGet('backupReminder', true);
@@ -32,7 +33,18 @@ function applyAppearance() {
   root.style.fontSize = (16 * (S.uiScale || 100) / 100) + 'px';
   root.style.setProperty('--font', FONTS[S.font] || SYS_FONT);
   root.classList.toggle('big', (S.uiScale || 100) >= 125);
+  applyTheme();
 }
+/* Design: auto folgt dem System (auch wenn es sich während der Nutzung ändert), sonst fest hell oder dunkel */
+const darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme() {
+  const dark = S.theme === 'dark' || (S.theme !== 'light' && !!(darkQuery && darkQuery.matches));
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = dark ? '#15303A' : '#1D3D47';
+}
+if (darkQuery) { const f = () => { if (S.theme === 'auto' || !S.theme) applyTheme(); }; darkQuery.addEventListener ? darkQuery.addEventListener('change', f) : darkQuery.addListener(f); }
+const isDark = () => document.documentElement.dataset.theme === 'dark';
 const actById = id => S.activities.find(a => a.id === id) || { id: 0, name_de: '?', icon: '❔', color: '#546E7A', scales: 'FREE' };
 const regById = id => S.regions.find(r => r.id === id);
 const tourById = id => S.tours.find(t => t.id === id);
@@ -459,7 +471,7 @@ function profileSvg(pts) {
   const X = x => (x / (d || 1)) * W, Y = e => H - pad - ((e - mn) / ((mx - mn) || 1)) * (H - pad - 8);
   const path = es.map((e, i) => (i ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(e).toFixed(1)).join(' ');
   const el = h(`<div class="card" style="padding:0.5rem 0.5rem 0.25rem;margin-top:0.5rem"><svg class="profile" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <path d="${path} L ${W} ${H} L 0 ${H} Z" fill="#2A9D8F" fill-opacity=".22"/><path d="${path}" fill="none" stroke="#1D3D47" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+    <path d="${path} L ${W} ${H} L 0 ${H} Z" style="fill:var(--accent)" fill-opacity=".22"/><path d="${path}" fill="none" style="stroke:var(--head)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
     <div class="row small muted" style="justify-content:space-between"><span>▼ ${fmtInt(mn)} m</span><span>${fmtKm(d)} km</span><span>▲ ${fmtInt(mx)} m</span></div></div>`);
   return el;
 }
@@ -577,7 +589,7 @@ function openHelp(anchor = '') {
   const pg = makePage({ title: T('help'), back: true, nopad: true });
   pushPage(pg);
   pg.content.classList.add('help');
-  pg.content.innerHTML = `<iframe src="help_${I18N.code}.html${anchor ? '#' + anchor : ''}" title="help"></iframe>`;
+  pg.content.innerHTML = `<iframe src="help_${I18N.code}.html${isDark() ? '?theme=dark' : ''}${anchor ? '#' + anchor : ''}" title="help"></iframe>`;
 }
 
 /* ------------------------------------------------------------------ Start */

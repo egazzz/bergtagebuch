@@ -17,8 +17,16 @@
   table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
   td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
   th { background: #E0EFEC; }
+  html.dark body { color: #E4ECEE; background: #11181B; }
+  html.dark h1, html.dark h2 { color: #8AD3C6; border-color: #33434A; }
+  html.dark .toc, html.dark table { background: #1C2629; }
+  html.dark .toc a, html.dark a { color: #35B3A4; }
+  html.dark .tip, html.dark th { background: #1F3B38; }
+  html.dark .warn { background: #3A2C1E; }
+  html.dark td, html.dark th { border-color: #33434A; }
   a { color: #2A9D8F; }
 </style>
+<script>if (/[?&]theme=dark/.test(location.search)) document.documentElement.className = 'dark';</script>
 </head>
 <body>
 <h1 id="start">Bergtagebuch – Aiuto</h1>
@@ -61,7 +69,8 @@
 <p>Per ogni anno o per tutti gli anni: escursioni, dislivello, chilometri, ore, giornate e cime, con confronto all'anno precedente. Inoltre attività, dislivello per mese, record, la <b>classifica delle cime</b> (per quota, più cime di un'escursione insieme), compagni e regioni più frequenti e 24 <b>traguardi</b>.</p>
 <h2 id="settings">Impostazioni</h2>
 <p>In <b>Altro → Impostazioni</b> trovi:</p>
-<ul><li><b>Carattere:</b> Standard, <i>Molto leggibile</i> (Atkinson Hyperlegible, pensato per chi vede male), <i>Arrotondato</i> (Nunito), <i>Classico</i> (Lato) o <i>Con grazie</i>.</li>
+<ul><li><b>Tema:</b> <i>Automatico</i> segue il tema chiaro o scuro del dispositivo, oppure fisso <i>Chiaro</i> o <i>Scuro</i>.</li>
+<li><b>Carattere:</b> Standard, <i>Molto leggibile</i> (Atkinson Hyperlegible, pensato per chi vede male), <i>Arrotondato</i> (Nunito), <i>Classico</i> (Lato) o <i>Con grazie</i>.</li>
 <li><b>Dimensione testo e app:</b> 100 %, 115 %, 125 % o 150 %. Testo, pulsanti e spazi si ingrandiscono subito in tutta l'app.</li>
 <li><b>Sezioni facoltative nel modulo:</b> <i>Sempre tutto aperto</i>, <i>Chiuse – solo l'essenziale</i> o <i>Come l'ultima volta</i>. Sono facoltative valutazione e meteo, difficoltà, compagni, partenza e posizione, descrizione e condizioni. Una sezione chiusa indica quanti campi sono compilati e si apre toccandola.</li>
 <li><b>Lingua</b> e <b>Promemoria backup</b>.</li></ul>
