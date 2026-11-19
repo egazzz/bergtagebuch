@@ -387,3 +387,6 @@ settings_theme=Theme
 theme_auto=Automatic (like the system)
 theme_light=Light
 theme_dark=Dark
+# Einstellungen
+changelog=Changelog
+version=Version

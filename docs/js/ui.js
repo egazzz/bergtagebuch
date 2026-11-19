@@ -94,7 +94,8 @@ function dialog({ title = '', text = '', html = '', buttons = [{ label: 'OK', va
 const alertBox = (text, title = '') => dialog({ title, text, buttons: [{ label: 'OK', value: true }] });
 const confirmBox = (text, yes, title = '', danger = false) => dialog({ title, text, buttons: [{ label: T('cancel'), value: false }, { label: yes || 'OK', value: true, cls: danger ? 'danger' : '' }] });
 function choose(title, options) {
-  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span style="font-size:1.375rem">${esc(o.icon)}</span>` : ''}<span>${esc(o.label)}</span></button>`).join('');
+  /* Zeilen mit Symbol im farbigen Kreis, Text und Häkchen für die aktuelle Auswahl */
+  const html = options.map((o, i) => `<button class="opt ${o.sel ? 'sel' : ''}" data-i="${i}">${o.icon ? `<span class="oi" style="${o.color ? `background:${safeColor(o.color)}40` : ''}">${esc(o.icon)}</span>` : ''}<span class="ol">${esc(o.label)}</span>${o.sel ? '<span class="ok">✓</span>' : ''}</button>`).join('');
   return dialog({ title, html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => {
     $$('.opt', ovl).forEach(b => b.onclick = () => close(options[+b.dataset.i].value));
   } });
@@ -585,11 +586,11 @@ async function openViewer(photos, start, { onCover, onRemove } = {}) {
 }
 
 /* ------------------------------------------------------------------ Hilfe */
-function openHelp(anchor = '') {
-  const pg = makePage({ title: T('help'), back: true, nopad: true });
+function openHelp(anchor = '', doc = 'help') {
+  const pg = makePage({ title: T(doc), back: true, nopad: true });
   pushPage(pg);
   pg.content.classList.add('help');
-  pg.content.innerHTML = `<iframe src="help_${I18N.code}.html${isDark() ? '?theme=dark' : ''}${anchor ? '#' + anchor : ''}" title="help"></iframe>`;
+  pg.content.innerHTML = `<iframe src="${doc}_${I18N.code}.html${isDark() ? '?theme=dark' : ''}${anchor ? '#' + anchor : ''}" title="${doc}"></iframe>`;
 }
 
 /* ------------------------------------------------------------------ Start */

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bergtagebuch – Note di versione</title>
+<style>
+  body { font-family: sans-serif; color: #1F2A2E; background: #F3F6F5; margin: 0; padding: 0 16px 40px; line-height: 1.5; font-size: 15px; }
+  h1 { color: #1D3D47; font-size: 22px; margin: 18px 0 6px; }
+  h2 { color: #1D3D47; font-size: 18px; margin: 26px 0 6px; padding-top: 8px; border-top: 1px solid #DDE5E3; }
+  .toc { background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .toc a { display: block; padding: 6px 0; color: #2A9D8F; text-decoration: none; font-weight: bold; }
+  .tip { background: #E0EFEC; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .warn { background: #FDEBD9; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  ol, ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
+  th { background: #E0EFEC; }
+  html.dark body { color: #E4ECEE; background: #11181B; }
+  html.dark h1, html.dark h2 { color: #8AD3C6; border-color: #33434A; }
+  html.dark .toc, html.dark table { background: #1C2629; }
+  html.dark .toc a, html.dark a { color: #35B3A4; }
+  html.dark .tip, html.dark th { background: #1F3B38; }
+  html.dark .warn { background: #3A2C1E; }
+  html.dark td, html.dark th { border-color: #33434A; }
+</style>
+<script>if (/[?&]theme=dark/.test(location.search)) document.documentElement.className = 'dark';</script>
+</head>
+<body>
+<h1>Note di versione</h1>
+<h2>1.9.2</h2>
+<ul>
+  <li>Elenchi di scelta più belli con simboli, colori e segno di spunta, adatti al tema chiaro e scuro – ad es. l'attività nell'importazione di più file GPX, il menu delle foto e „Cime vicine“ (Android).</li>
+  <li>Note di versione sempre consultabili: <i>Impostazioni → Note di versione</i>.</li>
+  <li>Sicurezza: i file GPX con DTD o entità vengono rifiutati. I veri file GPX non li contengono mai, file manipolati potrebbero bloccare l'app.</li>
+  <li>Sicurezza: gli aggiornamenti vengono scaricati solo dalle release del repository GitHub egazzz/bergtagebuch (Android).</li>
+</ul>
+<h2>1.9.1</h2>
+<ul>
+  <li>Tema scuro: lo sfondo della schermata iniziale era chiaro. Barra del titolo, barra di stato e finestre di sistema ora seguono anch'esse il tema (Android).</li>
+</ul>
+<h2>1.9</h2>
+<ul>
+  <li>Tema scuro: automatico secondo l'impostazione di sistema, oppure fisso Chiaro o Scuro in <i>Impostazioni → Tema</i>.</li>
+</ul>
+<h2>1.8.1</h2>
+<ul>
+  <li>I backup si possono cifrare con una password (AES-256).</li>
+  <li>Ricerca automatica delle cime disattivabile, nuova sezione d'aiuto „Privacy“.</li>
+  <li>Web app: i backup ripristinati vengono controllati, protezione aggiuntiva con una Content Security Policy. Corretto lo spillo nella scelta della posizione.</li>
+</ul>
+<h2>1.8</h2>
+<ul>
+  <li>Nuova pagina <i>Impostazioni</i>: carattere (tra cui Atkinson Hyperlegible per una migliore leggibilità), dimensione di testo e app dal 100 al 150 %.</li>
+  <li>Le sezioni facoltative del modulo si possono chiudere.</li>
+  <li>Lingua, controllo aggiornamenti all'avvio e promemoria backup in un unico posto.</li>
+</ul>
+<h2>1.7 e precedenti</h2>
+<ul>
+  <li>Diario delle escursioni con attività (anche proprie), scale di difficoltà secondo AVS e scale internazionali, foto con zoom, importazione GPX (singola e multipla), dislivello preciso, riconoscimento delle cime e cime vicine.</li>
+  <li>Mappa con molti tipi di mappa (incl. ortofoto e mappa di base Alto Adige) e filtri colore.</li>
+  <li>Statistiche con confronto con l'anno precedente, classifica delle cime e 24 traguardi.</li>
+  <li>Backup, rapporto diagnostico, aggiornamenti tramite GitHub con controllo a ogni avvio, aiuto in tedesco, italiano e inglese.</li>
+  <li>Web app per iPhone, iPad e computer su egazzz.github.io/bergtagebuch.</li>
+</ul>
+</body>
+</html>

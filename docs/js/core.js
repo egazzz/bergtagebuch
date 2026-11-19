@@ -1,7 +1,7 @@
 /* Bergtagebuch Web – Kern: Daten (IndexedDB), Sprachen, Skalen, GPX, Gipfelsuche, Statistik, Erfolge */
 'use strict';
 
-const APP_VERSION = '1.9.1';
+const APP_VERSION = '1.9.2';
 const KOFI_URL = 'https://ko-fi.com/egazzz';
 const OVERPASS = 'https://overpass-api.de/api/interpreter';
 
@@ -213,6 +213,8 @@ const Grades = {
 
 /* ------------------------------------------------------------------ GPX */
 function parseGpx(text) {
+  /* präparierte Dateien ablehnen: echte GPX-Dateien haben nie eine DTD (Schutz vor "Billion Laughs") */
+  if (/<!DOCTYPE|<!ENTITY/i.test(text.slice(0, 65536))) return null;
   const doc = new DOMParser().parseFromString(text, 'application/xml');
   if (doc.getElementsByTagName('parsererror').length) return null;
   let pts = [...doc.getElementsByTagName('trkpt')];

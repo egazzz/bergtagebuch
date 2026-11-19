@@ -401,3 +401,6 @@ settings_theme=Tema
 theme_auto=Automatico (come il sistema)
 theme_light=Chiaro
 theme_dark=Scuro
+# Einstellungen
+changelog=Note di versione
+version=Versione

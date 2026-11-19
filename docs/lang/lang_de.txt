@@ -403,3 +403,6 @@ settings_theme=Design
 theme_auto=Automatisch (wie das System)
 theme_light=Hell
 theme_dark=Dunkel
+# Einstellungen
+changelog=Versionshinweise
+version=Version

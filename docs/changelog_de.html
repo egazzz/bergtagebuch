@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bergtagebuch – Versionshinweise</title>
+<style>
+  body { font-family: sans-serif; color: #1F2A2E; background: #F3F6F5; margin: 0; padding: 0 16px 40px; line-height: 1.5; font-size: 15px; }
+  h1 { color: #1D3D47; font-size: 22px; margin: 18px 0 6px; }
+  h2 { color: #1D3D47; font-size: 18px; margin: 26px 0 6px; padding-top: 8px; border-top: 1px solid #DDE5E3; }
+  .toc { background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .toc a { display: block; padding: 6px 0; color: #2A9D8F; text-decoration: none; font-weight: bold; }
+  .tip { background: #E0EFEC; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .warn { background: #FDEBD9; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  ol, ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
+  th { background: #E0EFEC; }
+  html.dark body { color: #E4ECEE; background: #11181B; }
+  html.dark h1, html.dark h2 { color: #8AD3C6; border-color: #33434A; }
+  html.dark .toc, html.dark table { background: #1C2629; }
+  html.dark .toc a, html.dark a { color: #35B3A4; }
+  html.dark .tip, html.dark th { background: #1F3B38; }
+  html.dark .warn { background: #3A2C1E; }
+  html.dark td, html.dark th { border-color: #33434A; }
+</style>
+<script>if (/[?&]theme=dark/.test(location.search)) document.documentElement.className = 'dark';</script>
+</head>
+<body>
+<h1>Versionshinweise</h1>
+<h2>1.9.2</h2>
+<ul>
+  <li>Schönere Auswahllisten mit Symbolen, Farben und Häkchen, passend zum hellen und dunklen Design – z. B. die Aktivität beim Import mehrerer GPX-Dateien, das Foto-Menü und „Gipfel in der Nähe“ (Android).</li>
+  <li>Versionshinweise jederzeit nachlesbar: <i>Einstellungen → Versionshinweise</i>.</li>
+  <li>Sicherheit: GPX-Dateien mit DTD oder Entitäten werden abgelehnt. Echte GPX-Dateien enthalten so etwas nie, präparierte Dateien könnten damit die App lahmlegen.</li>
+  <li>Sicherheit: Updates werden nur noch aus den Releases des GitHub-Repositorys egazzz/bergtagebuch geladen (Android).</li>
+</ul>
+<h2>1.9.1</h2>
+<ul>
+  <li>Dark Mode: Der Hintergrund der Startseite war hell. Titelleiste, Statusleiste und Systemdialoge folgen jetzt ebenfalls dem Design (Android).</li>
+</ul>
+<h2>1.9</h2>
+<ul>
+  <li>Dark Mode: automatisch nach der Systemeinstellung, oder fest Hell bzw. Dunkel unter <i>Einstellungen → Design</i>.</li>
+</ul>
+<h2>1.8.1</h2>
+<ul>
+  <li>Backups lassen sich mit einem Passwort verschlüsseln (AES-256).</li>
+  <li>Automatische Gipfelsuche abschaltbar, neuer Hilfe-Abschnitt „Datenschutz“.</li>
+  <li>Web-App: wiederhergestellte Backups werden geprüft, zusätzlicher Schutz durch eine Content-Security-Policy. Stecknadel bei der Positionswahl behoben.</li>
+</ul>
+<h2>1.8</h2>
+<ul>
+  <li>Neue Seite <i>Einstellungen</i>: Schriftart (u. a. Atkinson Hyperlegible für bessere Lesbarkeit), Schrift- und App-Größe von 100 bis 150 %.</li>
+  <li>Optionale Bereiche im Eingabeformular lassen sich zuklappen.</li>
+  <li>Sprache, Update-Prüfung beim Start und Backup-Erinnerung an einem Ort.</li>
+</ul>
+<h2>1.7 und früher</h2>
+<ul>
+  <li>Tourenbuch mit Aktivitäten (auch eigenen), Schwierigkeitsskalen nach AVS und internationalen Skalen, Fotos mit Zoom, GPX-Import (einzeln und mehrere Dateien), genaue Höhenmeter, Gipfelerkennung und Gipfel in der Nähe.</li>
+  <li>Karte mit vielen Kartentypen (inkl. Orthofoto und Basiskarte Südtirol) und Farbfiltern.</li>
+  <li>Statistik mit Vorjahresvergleich, Gipfel-Rangliste und 24 Erfolgen.</li>
+  <li>Backup, Diagnosebericht, Updates über GitHub mit Prüfung bei jedem Start, Hilfe in Deutsch, Italienisch und Englisch.</li>
+  <li>Web-App für iPhone, iPad und Computer unter egazzz.github.io/bergtagebuch.</li>
+</ul>
+</body>
+</html>

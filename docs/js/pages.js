@@ -531,11 +531,13 @@ function openSettings() {
       <div class="sec">${esc(T('settings_privacy'))}</div><div class="list">
         ${toggle('s_sum', '⛰️', T('settings_auto_summits'), S.autoSummits)}
         <div class="item" id="s_priv"><span class="ic">🔒</span><div class="grow">${esc(T('privacy_info'))}</div><span class="chev">›</span></div></div>
+      <div class="sec">${esc(T('about'))}</div><div class="list">
+        ${item('s_log', '📋', T('changelog'), T('version') + ' ' + APP_VERSION)}</div>
       <div class="small muted" style="margin:-0.25rem 0.25rem 0">${esc(T('settings_auto_summits_hint'))}</div></div>`;
     const c = pg.content;
     $('#s_font', c).onclick = async () => {
       const keys = ['system', 'atkinson', 'nunito', 'lato', 'serif'];
-      const html = keys.map(k => `<button class="opt ${k === S.font ? 'sel' : ''}" data-k="${k}" style="font-family:${esc(FONTS[k])}">${esc(T('font_' + k))}</button>`).join('');
+      const html = keys.map(k => `<button class="opt ${k === S.font ? 'sel' : ''}" data-k="${k}" style="font-family:${esc(FONTS[k])}"><span class="ol">${esc(T('font_' + k))}</span>${k === S.font ? '<span class="ok">✓</span>' : ''}</button>`).join('');
       const k = await dialog({ title: T('settings_font'), html, buttons: [{ label: T('cancel'), value: null, cls: 'sec2' }], onOpen: (ovl, close) => $$('[data-k]', ovl).forEach(b => b.onclick = () => close(b.dataset.k)) });
       if (k) { S.font = k; await DB.kvSet('font', k); applyAppearance(); draw(); }
     };
@@ -559,6 +561,7 @@ function openSettings() {
     $('#s_bak', c).onchange = async e => { S.backupReminder = e.target.checked; await DB.kvSet('backupReminder', S.backupReminder); };
     $('#s_sum', c).onchange = async e => { S.autoSummits = e.target.checked; await DB.kvSet('autoSummits', S.autoSummits); };
     $('#s_priv', c).onclick = () => openHelp('privacy');
+    $('#s_log', c).onclick = () => openHelp('', 'changelog');
   };
   draw();
 }
@@ -683,7 +686,7 @@ async function bulkGpxImport() {
   if (!files.length) return;
   const MAX = 100;
   if (files.length > MAX) { toast(fill(T('gpx_multi_max'), { n: MAX }), 3500); files = files.slice(0, MAX); }
-  const actId = await choose(T('gpx_multi_activity'), S.activities.map(a => ({ label: pickName(a), icon: a.icon, value: a.id })));
+  const actId = await choose(T('gpx_multi_activity'), S.activities.map(a => ({ label: pickName(a), icon: a.icon, color: a.color, value: a.id })));
   if (!actId) return;
   const b = busy('');
   let ok = 0, dup = 0, bad = 0, online = true;

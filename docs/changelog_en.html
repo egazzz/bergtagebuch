@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bergtagebuch – Changelog</title>
+<style>
+  body { font-family: sans-serif; color: #1F2A2E; background: #F3F6F5; margin: 0; padding: 0 16px 40px; line-height: 1.5; font-size: 15px; }
+  h1 { color: #1D3D47; font-size: 22px; margin: 18px 0 6px; }
+  h2 { color: #1D3D47; font-size: 18px; margin: 26px 0 6px; padding-top: 8px; border-top: 1px solid #DDE5E3; }
+  .toc { background: #fff; border-radius: 12px; padding: 10px 14px; }
+  .toc a { display: block; padding: 6px 0; color: #2A9D8F; text-decoration: none; font-weight: bold; }
+  .tip { background: #E0EFEC; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  .warn { background: #FDEBD9; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
+  ol, ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; background: #fff; border-radius: 10px; overflow: hidden; font-size: 14px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #DDE5E3; text-align: left; vertical-align: top; }
+  th { background: #E0EFEC; }
+  html.dark body { color: #E4ECEE; background: #11181B; }
+  html.dark h1, html.dark h2 { color: #8AD3C6; border-color: #33434A; }
+  html.dark .toc, html.dark table { background: #1C2629; }
+  html.dark .toc a, html.dark a { color: #35B3A4; }
+  html.dark .tip, html.dark th { background: #1F3B38; }
+  html.dark .warn { background: #3A2C1E; }
+  html.dark td, html.dark th { border-color: #33434A; }
+</style>
+<script>if (/[?&]theme=dark/.test(location.search)) document.documentElement.className = 'dark';</script>
+</head>
+<body>
+<h1>Changelog</h1>
+<h2>1.9.2</h2>
+<ul>
+  <li>Nicer selection lists with icons, colours and check marks that match the light and dark theme – e.g. the activity when importing several GPX files, the photo menu and "Nearby summits" (Android).</li>
+  <li>Read the changelog at any time: <i>Settings → Changelog</i>.</li>
+  <li>Security: GPX files containing a DTD or entities are rejected. Real GPX files never contain them; crafted files could freeze the app.</li>
+  <li>Security: updates are only downloaded from the releases of the GitHub repository egazzz/bergtagebuch (Android).</li>
+</ul>
+<h2>1.9.1</h2>
+<ul>
+  <li>Dark mode: the home screen background was light. Title bar, status bar and system dialogs now also follow the theme (Android).</li>
+</ul>
+<h2>1.9</h2>
+<ul>
+  <li>Dark mode: automatic according to the system setting, or always Light or Dark under <i>Settings → Theme</i>.</li>
+</ul>
+<h2>1.8.1</h2>
+<ul>
+  <li>Backups can be encrypted with a password (AES-256).</li>
+  <li>Automatic summit lookup can be switched off; new help section "Privacy".</li>
+  <li>Web app: restored backups are validated, extra protection through a Content Security Policy. Fixed the pin when picking a position.</li>
+</ul>
+<h2>1.8</h2>
+<ul>
+  <li>New <i>Settings</i> page: font (including Atkinson Hyperlegible for better readability), text and app size from 100 to 150 %.</li>
+  <li>Optional sections of the tour form can be collapsed.</li>
+  <li>Language, update check at start and backup reminder in one place.</li>
+</ul>
+<h2>1.7 and earlier</h2>
+<ul>
+  <li>Tour diary with activities (including your own), difficulty scales following the AVS and international scales, photos with zoom, GPX import (single and bulk), accurate elevation gain, summit detection and nearby summits.</li>
+  <li>Map with many map types (including South Tyrol orthophoto and base map) and colour filters.</li>
+  <li>Statistics with previous-year comparison, summit ranking and 24 badges.</li>
+  <li>Backup, diagnostic report, updates via GitHub with a check at every start, help in German, Italian and English.</li>
+  <li>Web app for iPhone, iPad and computers at egazzz.github.io/bergtagebuch.</li>
+</ul>
+</body>
+</html>
